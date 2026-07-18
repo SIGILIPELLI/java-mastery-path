@@ -1534,6 +1534,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 · JVM Internals & Garbage Collection Basics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1550,6 +1568,113 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jvm-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM architecture overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-loading-briefly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class loading, briefly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-generational-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The generational heap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-gc-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common GC algorithms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heap-sizing-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heap sizing flags
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observing-allocation-and-gc-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing allocation and GC pressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspecting-a-running-jvm-with-jcmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a running JVM with jcmd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2013,6 +2138,102 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#jvm-architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JVM architecture overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-loading-briefly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class loading, briefly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-generational-heap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The generational heap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-gc-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common GC algorithms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#heap-sizing-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Heap sizing flags
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observing-allocation-and-gc-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observing allocation and GC pressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspecting-a-running-jvm-with-jcmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a running JVM with jcmd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2032,13 +2253,192 @@
 
 
 <h1 id="09-jvm-internals-garbage-collection-basics">09 · JVM Internals &amp; Garbage Collection Basics<a class="headerlink" href="#09-jvm-internals-garbage-collection-basics" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Coming soon</p>
-<p>This module's full lessons and code snippets are being written next.
-How the JVM works and the basics of garbage collection.</p>
-</div>
-<p>Check the task ledger or ask your virtual employee for a status update on
-remaining content.</p>
+<p>Java code doesn't run directly on the CPU — it runs on the Java Virtual
+Machine (JVM), which loads compiled bytecode, manages memory, and translates
+it into native instructions. Understanding the JVM's structure helps explain
+both performance and the automatic memory management that makes Java easier
+(if less predictable) than manual memory management.</p>
+<h2 id="jvm-architecture-overview">JVM architecture overview<a class="headerlink" href="#jvm-architecture-overview" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Class loader</td>
+<td>Loads <code>.class</code> files into memory, links and initializes classes</td>
+</tr>
+<tr>
+<td>Heap</td>
+<td>Stores all objects and arrays; shared across all threads</td>
+</tr>
+<tr>
+<td>Stack</td>
+<td>Per-thread; stores method call frames, local variables, partial results</td>
+</tr>
+<tr>
+<td>Metaspace</td>
+<td>Stores class metadata (replaces the old "permanent generation")</td>
+</tr>
+<tr>
+<td>Execution engine</td>
+<td>Interprets bytecode, or compiles it to native code via the JIT compiler</td>
+</tr>
+<tr>
+<td>Garbage collector</td>
+<td>Reclaims heap memory occupied by objects no longer reachable</td>
+</tr>
+</tbody>
+</table>
+<p>Every thread gets its own stack (so recursion in one thread can't corrupt
+another thread's local variables), but all threads share the same heap —
+which is exactly why concurrent access to heap-allocated objects needs the
+coordination covered in
+<a href="../01-concurrency-basics/">Level 3, Module 1</a>.</p>
+<h2 id="class-loading-briefly">Class loading, briefly<a class="headerlink" href="#class-loading-briefly" title="Permanent link">&para;</a></h2>
+<p>Before any of your code runs, the class loader subsystem finds a class's
+bytecode (from the classpath, a JAR, wherever) and takes it through three
+phases: <strong>loading</strong> (reading the <code>.class</code> bytes into memory), <strong>linking</strong>
+(verifying the bytecode is well-formed, allocating storage for static
+fields), and <strong>initialization</strong> (running static initializers and static field
+assignments, top to bottom in source order).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">LoadingDemo</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Static initializer running&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initCounter</span><span class="p">();</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">initCounter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Initializing counter&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;main() running&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">}</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1">// Output:</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1">// Static initializer running</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1">// Initializing counter</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="c1">// main() running</span>
+</code></pre></div>
+<p>A class is only loaded and initialized the first time it's actually
+referenced (a <code>new</code>, a static method call, accessing a static field) — this
+"lazy initialization" is why a class you never use adds essentially no
+startup cost.</p>
+<h2 id="the-generational-heap">The generational heap<a class="headerlink" href="#the-generational-heap" title="Permanent link">&para;</a></h2>
+<p>Most objects die young — a temporary <code>String</code> built inside a loop, a local
+list used and discarded within one method call. The HotSpot JVM exploits this
+observation by splitting the heap into <strong>generations</strong>:</p>
+<ul>
+<li><strong>Young generation</strong> — new objects are allocated here first (in an area
+  called "Eden"). Minor GCs run frequently but are cheap, since most objects
+  in Eden are already garbage by the time a collection runs.</li>
+<li><strong>Old generation (tenured)</strong> — objects that survive several young-generation
+  collections get "promoted" here. Old-gen collections are less frequent but
+  more expensive, since they scan a much larger region.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Heap
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a> ├── Young Generation
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a> │     ├── Eden          (new objects allocated here)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a> │     ├── Survivor 0
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a> │     └── Survivor 1
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a> └── Old Generation       (long-lived, promoted objects)
+</code></pre></div>
+<h2 id="common-gc-algorithms">Common GC algorithms<a class="headerlink" href="#common-gc-algorithms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Collector</th>
+<th>Flag</th>
+<th>Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Serial GC</td>
+<td><code>-XX:+UseSerialGC</code></td>
+<td>Single-threaded; simplest, best for small heaps/apps</td>
+</tr>
+<tr>
+<td>Parallel GC</td>
+<td><code>-XX:+UseParallelGC</code></td>
+<td>Multi-threaded stop-the-world; maximizes throughput</td>
+</tr>
+<tr>
+<td>G1 (Garbage-First)</td>
+<td><code>-XX:+UseG1GC</code></td>
+<td>Default since Java 9; balances throughput and pause times</td>
+</tr>
+<tr>
+<td>ZGC</td>
+<td><code>-XX:+UseZGC</code></td>
+<td>Ultra-low pause times (sub-millisecond), scales to huge heaps</td>
+</tr>
+</tbody>
+</table>
+<p>G1 is the JVM's default collector today and a reasonable choice for most
+applications; ZGC and Shenandoah trade some throughput for dramatically lower
+pause times, useful for latency-sensitive services.</p>
+<h2 id="heap-sizing-flags">Heap sizing flags<a class="headerlink" href="#heap-sizing-flags" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>java<span class="w"> </span>-Xms256m<span class="w"> </span>-Xmx1024m<span class="w"> </span>-XX:+UseG1GC<span class="w"> </span>-jar<span class="w"> </span>myapp.jar
+</code></pre></div>
+<ul>
+<li><code>-Xms</code> — initial heap size (256 MB here).</li>
+<li><code>-Xmx</code> — maximum heap size (1024 MB here) — if the JVM can't reclaim enough
+  memory to satisfy an allocation once it's hit this ceiling, it throws
+  <code>OutOfMemoryError</code>.</li>
+<li><code>-XX:+UseG1GC</code> — selects the G1 collector explicitly (already the default
+  on modern JVMs, but useful to know how to force it).</li>
+</ul>
+<h2 id="observing-allocation-and-gc-pressure">Observing allocation and GC pressure<a class="headerlink" href="#observing-allocation-and-gc-pressure" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GcPressureDemo</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">        </span><span class="c1">// Allocate a large number of short-lived objects to pressure the young generation</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">5_000_000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">            </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;object-&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w">   </span><span class="c1">// each concatenation allocates a new String</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">    </span><span class="c1">// never true -- keeps the compiler from optimizing it away</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">s</span><span class="p">);</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="kt">long</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Allocated 5,000,000 short-lived strings in &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">elapsed</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; ms&quot;</span><span class="p">);</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
+</code></pre></div>
+<p>Run it with GC logging enabled to watch collections happen in real time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>java<span class="w"> </span>-Xlog:gc<span class="w"> </span>GcPressureDemo
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[0.012s][info][gc] Using G1
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[0.045s][info][gc] GC(0) Pause Young (Normal) (G1 Evacuation Pause) 12M-&gt;3M(64M) 4.112ms
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[0.089s][info][gc] GC(1) Pause Young (Normal) (G1 Evacuation Pause) 15M-&gt;3M(64M) 3.887ms
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>...
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Allocated 5,000,000 short-lived strings in 612 ms
+</code></pre></div>
+<p>(<code>-Xlog:gc</code> is the modern unified logging flag; older material may reference
+<code>-verbose:gc</code>, which still works but is less detailed.)</p>
+<h2 id="inspecting-a-running-jvm-with-jcmd">Inspecting a running JVM with <code>jcmd</code><a class="headerlink" href="#inspecting-a-running-jvm-with-jcmd" title="Permanent link">&para;</a></h2>
+<p><code>jcmd</code> is a general-purpose diagnostic tool bundled with the JDK — no code
+changes needed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>jcmd<span class="w"> </span>&lt;pid&gt;<span class="w"> </span>GC.heap_info<span class="w">      </span><span class="c1"># summary of heap regions and usage</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>jcmd<span class="w"> </span>&lt;pid&gt;<span class="w"> </span>GC.run<span class="w">            </span><span class="c1"># request a full garbage collection</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>jcmd<span class="w"> </span>&lt;pid&gt;<span class="w"> </span>VM.flags<span class="w">          </span><span class="c1"># show the JVM flags currently in effect</span>
+</code></pre></div>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Write a program that builds a <code>List&lt;byte[]&gt;</code>, repeatedly adding a new 1 MB
+<code>byte[]</code> array in a loop, printing the iteration count every 50 iterations.
+Run it with <code>-Xmx200m -Xlog:gc</code> and observe both the GC log output and, once
+the list grows too large for the heap, the resulting
+<code>OutOfMemoryError: Java heap space</code> — then explain in a comment why holding a
+reference to every array in the list (instead of discarding each one) is what
+prevents the garbage collector from reclaiming them.</p>
 
 
 

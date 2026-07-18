@@ -1130,6 +1130,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 · Build Tools Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1146,6 +1164,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-full-maven-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The full Maven lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-module-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-module basics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradle-as-an-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradle as an alternative
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maven-vs-gradle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maven vs. Gradle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2013,6 +2116,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-full-maven-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The full Maven lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-scopes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency scopes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multi-module-basics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-module basics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gradle-as-an-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradle as an alternative
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maven-vs-gradle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maven vs. Gradle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exercise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exercise
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2032,13 +2209,236 @@
 
 
 <h1 id="08-build-tools-deep-dive">08 · Build Tools Deep Dive<a class="headerlink" href="#08-build-tools-deep-dive" title="Permanent link">&para;</a></h1>
-<div class="admonition info">
-<p class="admonition-title">Coming soon</p>
-<p>This module's full lessons and code snippets are being written next.
-Maven and Gradle lifecycle, and dependency management.</p>
-</div>
-<p>Check the task ledger or ask your virtual employee for a status update on
-remaining content.</p>
+<p><a href="../../level-1/09-packages-build-tools/">Level 1, Module 9</a> introduced Maven's
+<code>pom.xml</code> and the basic <code>compile</code>/<code>test</code>/<code>package</code> commands. This module goes
+deeper into the full lifecycle, dependency scopes, and Gradle as an
+alternative.</p>
+<h2 id="the-full-maven-lifecycle">The full Maven lifecycle<a class="headerlink" href="#the-full-maven-lifecycle" title="Permanent link">&para;</a></h2>
+<p>Maven organizes a build into a sequence of numbered <strong>phases</strong>. Running any
+phase automatically runs every phase before it, in order:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>validate  -&gt; compile -&gt; test -&gt; package -&gt; verify -&gt; install -&gt; deploy
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validate</code></td>
+<td>Checks the project structure and <code>pom.xml</code> are correct</td>
+</tr>
+<tr>
+<td><code>compile</code></td>
+<td>Compiles <code>src/main/java</code> into <code>target/classes</code></td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Compiles and runs <code>src/test/java</code> against a test framework (e.g. JUnit)</td>
+</tr>
+<tr>
+<td><code>package</code></td>
+<td>Bundles compiled code into a distributable <code>.jar</code> (or <code>.war</code>)</td>
+</tr>
+<tr>
+<td><code>verify</code></td>
+<td>Runs additional checks (e.g. integration tests) on the packaged artifact</td>
+</tr>
+<tr>
+<td><code>install</code></td>
+<td>Copies the artifact into your local <code>~/.m2</code> repository, for other local projects to depend on</td>
+</tr>
+<tr>
+<td><code>deploy</code></td>
+<td>Publishes the artifact to a shared/remote repository for other people's projects</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mvn<span class="w"> </span>compile<span class="w">    </span><span class="c1"># runs validate, compile</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mvn<span class="w"> </span><span class="nb">test</span><span class="w">       </span><span class="c1"># runs validate, compile, test</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mvn<span class="w"> </span>package<span class="w">    </span><span class="c1"># ...through package -- produces target/my-app-1.0.0.jar</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mvn<span class="w"> </span>install<span class="w">    </span><span class="c1"># ...through install -- available to other local Maven projects</span>
+</code></pre></div>
+<p><code>mvn clean</code> is special — it isn't part of the main lifecycle above, it just
+deletes <code>target/</code>. It's commonly chained: <code>mvn clean package</code>.</p>
+<h2 id="dependency-scopes">Dependency scopes<a class="headerlink" href="#dependency-scopes" title="Permanent link">&para;</a></h2>
+<p>Every <code>&lt;dependency&gt;</code> in <code>pom.xml</code> has a <strong>scope</strong> controlling when it's
+available and whether it ships with the final artifact:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;dependencies&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="cm">&lt;!-- default scope: available everywhere, bundled in the final artifact --&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nt">&lt;groupId&gt;</span>com.google.guava<span class="nt">&lt;/groupId&gt;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>guava<span class="nt">&lt;/artifactId&gt;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">        </span><span class="nt">&lt;version&gt;</span>33.0.0-jre<span class="nt">&lt;/version&gt;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nt">&lt;scope&gt;</span>compile<span class="nt">&lt;/scope&gt;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="cm">&lt;!-- only available while compiling/running tests, never shipped --&gt;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.junit.jupiter<span class="nt">&lt;/groupId&gt;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>junit-jupiter<span class="nt">&lt;/artifactId&gt;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">        </span><span class="nt">&lt;version&gt;</span>5.10.2<span class="nt">&lt;/version&gt;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="cm">&lt;!-- needed to compile against, but supplied by the runtime environment</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="cm">         (e.g. a servlet container providing the Servlet API) --&gt;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">        </span><span class="nt">&lt;groupId&gt;</span>jakarta.servlet<span class="nt">&lt;/groupId&gt;</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>jakarta.servlet-api<span class="nt">&lt;/artifactId&gt;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">        </span><span class="nt">&lt;version&gt;</span>6.0.0<span class="nt">&lt;/version&gt;</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="nt">&lt;scope&gt;</span>provided<span class="nt">&lt;/scope&gt;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="w">    </span><span class="cm">&lt;!-- needed only at runtime, not for compiling your own code against --&gt;</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="w">        </span><span class="nt">&lt;groupId&gt;</span>com.mysql<span class="nt">&lt;/groupId&gt;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>mysql-connector-j<span class="nt">&lt;/artifactId&gt;</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a><span class="w">        </span><span class="nt">&lt;version&gt;</span>8.3.0<span class="nt">&lt;/version&gt;</span>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="w">        </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Available at compile time</th>
+<th>Available at test time</th>
+<th>Bundled/shipped</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compile</code> (default)</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>provided</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>No (assumed present at runtime)</td>
+</tr>
+<tr>
+<td><code>runtime</code></td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="multi-module-basics">Multi-module basics<a class="headerlink" href="#multi-module-basics" title="Permanent link">&para;</a></h2>
+<p>A large project can be split into several Maven modules sharing one parent
+<code>pom.xml</code>. The parent declares <code>&lt;modules&gt;</code>; each child has its own <code>pom.xml</code>
+with <code>&lt;parent&gt;</code> pointing back up:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cm">&lt;!-- parent pom.xml --&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">&lt;project&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&lt;modelVersion&gt;</span>4.0.0<span class="nt">&lt;/modelVersion&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.example<span class="nt">&lt;/groupId&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>inventory-parent<span class="nt">&lt;/artifactId&gt;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="nt">&lt;version&gt;</span>1.0.0<span class="nt">&lt;/version&gt;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">&lt;packaging&gt;</span>pom<span class="nt">&lt;/packaging&gt;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">&lt;modules&gt;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="nt">&lt;module&gt;</span>inventory-core<span class="nt">&lt;/module&gt;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">        </span><span class="nt">&lt;module&gt;</span>inventory-cli<span class="nt">&lt;/module&gt;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">&lt;/modules&gt;</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nt">&lt;/project&gt;</span>
+</code></pre></div>
+<p>Running <code>mvn install</code> from the parent directory builds every module in
+dependency order. This is enough to recognize the pattern when you meet it —
+full multi-module configuration is out of scope for this course.</p>
+<h2 id="gradle-as-an-alternative">Gradle as an alternative<a class="headerlink" href="#gradle-as-an-alternative" title="Permanent link">&para;</a></h2>
+<p>Gradle uses a script-based configuration (Groovy or, more commonly today, the
+Kotlin DSL, <code>build.gradle.kts</code>) instead of Maven's declarative XML. Here is a
+rough Gradle equivalent of the JUnit-enabled <code>pom.xml</code> from
+<a href="../07-junit-testing/">Module 7</a>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// build.gradle.kts</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">plugins</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">id</span><span class="p">(</span><span class="s">&quot;java&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;1.0.0&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">repositories</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="n">mavenCentral</span><span class="p">()</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">dependencies</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="n">testImplementation</span><span class="p">(</span><span class="s">&quot;org.junit.jupiter:junit-jupiter:5.10.2&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p">}</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="n">java</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="n">sourceCompatibility</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JavaVersion</span><span class="p">.</span><span class="na">VERSION_21</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="n">targetCompatibility</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JavaVersion</span><span class="p">.</span><span class="na">VERSION_21</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="p">}</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="n">tasks</span><span class="p">.</span><span class="na">test</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="n">useJUnitPlatform</span><span class="p">()</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gradle<span class="w"> </span>build<span class="w">     </span><span class="c1"># if Gradle is installed globally</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>./gradlew<span class="w"> </span>build<span class="w">  </span><span class="c1"># using the &quot;Gradle wrapper&quot; checked into the project -- preferred,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">                 </span><span class="c1"># guarantees everyone uses the same Gradle version</span>
+</code></pre></div>
+<h2 id="maven-vs-gradle">Maven vs. Gradle<a class="headerlink" href="#maven-vs-gradle" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Maven</th>
+<th>Gradle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Config format</td>
+<td>XML (<code>pom.xml</code>)</td>
+<td>Groovy or Kotlin DSL (<code>build.gradle[.kts]</code>)</td>
+</tr>
+<tr>
+<td>Philosophy</td>
+<td>Convention over configuration, declarative</td>
+<td>Flexible, imperative/declarative mix</td>
+</tr>
+<tr>
+<td>Dependency scopes</td>
+<td><code>compile</code>, <code>test</code>, <code>provided</code>, <code>runtime</code></td>
+<td><code>implementation</code>, <code>testImplementation</code>, <code>compileOnly</code>, <code>runtimeOnly</code></td>
+</tr>
+<tr>
+<td>Build/test command</td>
+<td><code>mvn package</code> / <code>mvn test</code></td>
+<td><code>gradle build</code> / <code>gradle test</code></td>
+</tr>
+<tr>
+<td>Wrapper</td>
+<td><code>mvnw</code></td>
+<td><code>gradlew</code></td>
+</tr>
+</tbody>
+</table>
+<p>Both download dependencies from the same shared repository (Maven Central)
+and solve the same underlying problem — the choice is largely ecosystem and
+team convention.</p>
+<h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
+<p>Take the <code>pom.xml</code> from <a href="../07-junit-testing/">Module 7</a> and add a second
+dependency for the Guava library (<code>com.google.guava:guava:33.0.0-jre</code>) with
+the default <code>compile</code> scope, then a third dependency for <code>logback-classic</code>
+with <code>runtime</code> scope. Then write the Gradle (<code>build.gradle.kts</code>) equivalent
+of that full three-dependency <code>pom.xml</code> from scratch, matching each Maven
+scope to its Gradle configuration name from the table above.</p>
 
 
 
