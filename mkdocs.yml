@@ -1,8 +1,8 @@
 site_name: Java Mastery Path
 site_description: A structured, module-wise Java training program from entry level to master level.
-site_url: https://sigilipelli.github.io/java-mastery-path/
-repo_url: https://github.com/SIGILIPELLI/java-mastery-path
-repo_name: java-mastery-path
+site_url: https://sigilipelli.github.io/java-skillmastery/
+repo_url: https://github.com/SIGILIPELLI/java-skillmastery
+repo_name: java-skillmastery
 
 theme:
   name: material
