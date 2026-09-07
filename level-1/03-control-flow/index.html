@@ -840,6 +840,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2462,6 +2484,27 @@ fall-through, and it returns a value directly:</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Every <code>if</code>/<code>else</code>, <code>while</code>, and <code>for</code> you write compiles down to
+<strong>conditional jump bytecodes</strong> operating on the operand stack —
+<code>if_icmpge</code>, <code>ifeq</code>, <code>goto</code> — there is no structured-control-flow concept
+inside the class file at all; it's all comparisons and jumps to byte
+offsets, exactly like assembly. The compiler's job is to turn nested
+braces into a flat, jump-target-labeled instruction stream.</p>
+<p>The JIT compiler treats loop bodies specially: methods with hot loops can
+get <strong>on-stack replacement (OSR)</strong> — the JVM compiles just that loop to
+native code and transplants the interpreter's live locals into the
+compiled frame <em>while the loop is still running</em>, without waiting for the
+method to be called again. This is why a single long-running loop in
+<code>main</code> can still benefit from JIT optimization even though <code>main</code> itself
+is called only once.</p>
+<p><code>switch</code> on a <code>String</code> is not a special bytecode — the compiler
+desugars it into two nested switches: the first switches on
+<code>String.hashCode()</code> (a fast <code>tableswitch</code>/<code>lookupswitch</code> over ints), and
+inside each hash bucket a chain of <code>.equals()</code> calls disambiguates
+collisions before jumping to the matching case body. That's why
+<code>hashCode()</code> consistency matters even though you never call it directly
+in a <code>switch</code> statement.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that loops from 1 to 100 and, for each number: prints "Fizz"
 if divisible by 3, "Buzz" if divisible by 5, "FizzBuzz" if divisible by both,

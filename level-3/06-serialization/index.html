@@ -1678,6 +1678,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2509,6 +2531,35 @@ services, JSON (or similar text formats) is the practical default.</p>
 <p>Spring Boot uses Jackson automatically under the hood to serialize
 <code>@RestController</code> responses to JSON — see
 <a href="../04-rest-apis-spring-boot/">Level 3, Module 4</a>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>ObjectOutputStream</code> doesn't just dump raw field bytes — it writes a
+self-describing binary format: a stream header, then for each object a
+<strong>class descriptor</strong> (fully-qualified name, <code>serialVersionUID</code>, and a
+list of field names/types) followed by the field values, and object
+references are tracked in a <strong>handle table</strong> so that if the same object
+appears twice in the graph (or the graph is cyclic), it's serialized
+once and referenced by handle thereafter — this is genuinely how
+<code>Serializable</code> correctly round-trips shared and cyclic object graphs
+without infinite recursion or duplicate copies.</p>
+<p><code>serialVersionUID</code> matters mechanically because deserialization compares
+the UID embedded in the stream against the UID of the class currently
+loaded in the JVM — a mismatch throws <code>InvalidClassException</code>
+immediately, before any field data is even read, specifically to stop
+the JVM from mapping old field layouts onto a class whose shape has
+since changed in incompatible ways. If you omit it, <code>javac</code> computes one
+automatically from a hash of the class's structure (fields, methods,
+interfaces) — which is why adding an unrelated method can silently
+change the computed UID and break compatibility with previously
+serialized data.</p>
+<p>Jackson's <code>ObjectMapper</code> works by reflection over your class's fields/
+getters/setters (or record components) to build a cached
+<code>BeanDescription</code> the first time it sees a type, then reuses that
+introspected mapping on every subsequent (de)serialization of the same
+class — this is why Jackson performance is dominated by a one-time
+per-class reflection cost rather than per-call reflection, and why a
+class with no default constructor and no matching Jackson annotations
+fails at that introspection step rather than at each individual
+serialize call.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Create a <code>Product</code> record with <code>name</code>, <code>price</code>, and <code>inStock</code> fields. Use
 Jackson's <code>ObjectMapper</code> to serialize a list of three <code>Product</code> instances to a

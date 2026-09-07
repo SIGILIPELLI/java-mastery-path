@@ -1238,6 +1238,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2357,6 +2368,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2576,6 +2598,27 @@ for you). Consequences worth knowing:</p>
 compile-time type checking for that variable — you lose the entire benefit of
 generics and reintroduce the risk of <code>ClassCastException</code>. Always supply a
 type argument (or `&lt;&gt;, the diamond operator, when it can be inferred).</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Java generics are implemented by <strong>type erasure</strong>: <code>List&lt;String&gt;</code> and
+<code>List&lt;Integer&gt;</code> compile to the exact same bytecode operating on plain
+<code>List</code>, with the compiler inserting invisible <code>checkcast</code> instructions
+at extraction points to preserve the illusion of type safety. This is
+why you can't do <code>new T[10]</code> (the JVM has no runtime record of what <code>T</code>
+is inside a generic method), why <code>List&lt;String&gt;.class</code> doesn't exist as a
+distinct <code>Class</code> object, and why two overloads differing only by generic
+type parameter are a compile error — after erasure they'd have identical
+signatures.</p>
+<p>Bridge methods are the erasure mechanism's most visible artifact: when a
+generic class is subclassed with a concrete type argument and overrides
+a method, the compiler silently generates an extra <strong>bridge method</strong>
+with the erased signature that just casts arguments and delegates to
+your typed override — necessary so <code>invokevirtual</code> dispatch still finds
+the right override when called through the raw/erased type.</p>
+<p>Wildcards (<code>? extends T</code>, <code>? super T</code>) exist purely at the compiler
+level to make the erasure-based type system sound for covariant/
+contravariant use (PECS — Producer Extends, Consumer Super) — there is
+zero runtime representation of a wildcard; it's entirely a static
+type-checking device.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a generic class <code>Stack&lt;T&gt;</code> backed by a <code>List&lt;T&gt;</code> (or an array), with
 methods <code>push(T item)</code>, <code>T pop()</code> (removes and returns the top item, throwing

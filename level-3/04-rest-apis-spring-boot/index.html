@@ -1633,6 +1633,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2524,6 +2546,29 @@ automatically at startup because both classes are annotated as beans
 <code>@Component</code> stereotype) — you never write <code>new GreetingService()</code> yourself.
 Persisting data behind these endpoints with Spring Data JPA is covered in the
 <a href="../11-project-rest-api-db/">capstone project</a>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Spring Boot's <code>@RestController</code> dispatch runs through
+<code>DispatcherServlet</code>, which at startup builds a <strong><code>HandlerMapping</code></strong> —
+essentially a routing table from URL pattern + HTTP method to a
+reflectively-invokable controller method — by scanning <code>@RequestMapping</code>
+annotations via reflection at application context startup, not at
+request time. Each incoming request is matched against that table, and
+the actual controller call happens through <code>Method.invoke()</code> with
+arguments resolved by <code>HandlerMethodArgumentResolver</code>s that pull values
+out of the request (path variables, query params, deserialized JSON
+body via Jackson reflecting over your DTO's fields/setters).</p>
+<p>Auto-configuration is conditional reflection at scale:
+<code>@ConditionalOnClass</code>/<code>@ConditionalOnMissingBean</code> annotations on
+Spring's own configuration classes are evaluated during context
+startup by inspecting the classpath and the bean definitions already
+registered — Spring Boot doesn't know your app in advance; it decides
+what to wire up by <em>inspecting what's present</em> at boot time.</p>
+<p>Embedded Tomcat means the servlet container is just a library your
+<code>main()</code> starts, not an external process — this is why a Spring Boot JAR
+is self-contained and runnable with <code>java -jar</code>, and why request
+handling still ultimately bottoms out in ordinary blocking servlet
+threads (one per in-flight request) unless you opt into WebFlux's
+reactive, event-loop model.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add a <code>@RestController</code> with a <code>GET /api/square/{n}</code> endpoint that returns a
 JSON object <code>{ "input": n, "result": n*n }</code> (define a small record for the

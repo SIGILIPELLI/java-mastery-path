@@ -997,6 +997,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2453,6 +2475,26 @@ depth in <a href="../../level-2/08-build-tools/">Level 2, Module 8</a>.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A package name isn't just documentation — it becomes part of the
+<strong>fully-qualified binary name</strong> stored in every class file's constant
+pool (<code>com/example/Foo</code>), and the classpath is literally a list of
+directories/JARs the class loader scans, expecting to find
+<code>com/example/Foo.class</code> at the matching relative path. Two classes with
+the same simple name in different packages are completely distinct types
+to the JVM — there's no collision because the loader keys classes by
+<code>(defining loader, fully-qualified name)</code>, not simple name.</p>
+<p>A JAR file is just a ZIP with a <code>META-INF/MANIFEST.MF</code>; when you run
+<code>java -jar app.jar</code>, the JVM reads <code>Main-Class:</code> from that manifest to
+find the entry point via reflection — the same
+<code>getMethod("main", String[].class)</code> lookup as running a class directly.</p>
+<p>Maven/Gradle builds matter mechanically because compilation order and
+the classpath they assemble determine which class file wins when the
+<strong>same fully-qualified class name</strong> appears in two dependency JARs
+(classpath order decides, silently — "JAR hell") — the class loader takes
+the first one it finds and never checks the rest, which is why dependency
+conflicts often manifest as confusing <code>NoSuchMethodError</code>s at runtime
+rather than build failures.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Create a Maven project on disk by hand (no need to actually run <code>mvn</code> if you
 don't have it installed yet — the goal is the structure): a <code>pom.xml</code> for an

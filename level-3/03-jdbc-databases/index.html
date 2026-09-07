@@ -1594,6 +1594,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2556,6 +2578,30 @@ read by name (<code>rs.getString("name")</code>) or 1-based index (<code>rs.getS
 like Spring Data JPA (used in <a href="../04-rest-apis-spring-boot/">Level 3, Module 4</a>
 and the <a href="../11-project-rest-api-db/">capstone project</a>) builds on JDBC under
 the hood but lets you work with objects instead of raw SQL.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A JDBC <code>PreparedStatement</code> isn't just a syntactic convenience for
+avoiding string concatenation — when you call <code>prepareStatement(sql)</code>,
+the driver sends the SQL text to the database <strong>once</strong>, and the database
+parses, plans, and compiles it into an execution plan keyed by that
+exact query shape; every subsequent <code>setInt</code>/<code>setString</code> +
+<code>executeQuery</code> call sends only the bound parameter <em>values</em> over the
+wire, reusing the cached plan. This is precisely why prepared statements
+are structurally immune to SQL injection: user input is transmitted as
+data in a separate protocol message, never concatenated into the SQL
+text the parser sees, so there's no way for it to be interpreted as
+syntax.</p>
+<p>Connection pooling exists because opening a JDBC connection is
+expensive: TCP handshake, TLS negotiation, database-side authentication,
+and session-state setup all happen per connection — a pool (HikariCP,
+etc.) keeps a warm set of already-authenticated connections and just
+hands one out and takes it back, turning a multi-millisecond setup cost
+into a cheap object checkout.</p>
+<p><code>ResultSet</code> iteration is typically a streaming <strong>cursor</strong> on the
+database side, not a fully materialized in-memory table — <code>next()</code>
+often triggers a fetch of the next batch of rows over the wire
+(<code>fetchSize</code>), which is why holding a <code>ResultSet</code> open across a slow
+loop can hold server-side resources and why fetch-size tuning matters
+for large result sets.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Using an in-memory H2 database, create a <code>books</code> table with columns <code>id</code>
 (auto-increment primary key), <code>title</code>, and <code>year</code>. Write methods <code>addBook</code>,

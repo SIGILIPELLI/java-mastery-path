@@ -924,6 +924,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2468,6 +2490,28 @@ concatenation:</p>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">        &quot;&quot;&quot;</span><span class="p">;</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">html</span><span class="p">);</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>String</code> objects are backed by an immutable <code>byte[]</code> (since Java 9's
+<strong>Compact Strings</strong>: Latin-1 content is stored 1 byte/char, and only
+strings containing real UTF-16 characters fall back to 2 bytes/char,
+tracked by a <code>coder</code> flag) — immutability is enforced by the <code>final</code>
+field and no mutator methods, which is what makes strings safe to share
+across threads without synchronization and safe to use as <code>HashMap</code> keys
+(the hash is computed once and cached in a <code>hash</code> field).</p>
+<p>String literals are <strong>interned</strong>: the compiler places them in a
+JVM-managed string pool (part of the heap since Java 7), and two
+identical literals resolve to the very same object via <code>ldc</code>'s
+constant-pool lookup — which is why <code>"abc" == "abc"</code> is <code>true</code> but
+<code>new String("abc") == "abc"</code> is <code>false</code>; <code>new String(...)</code> forces a
+fresh heap allocation that bypasses the pool.</p>
+<p>String concatenation with <code>+</code> in a loop is a trap for a mechanical
+reason: each <code>+</code> in older bytecode compiled to a fresh <code>StringBuilder</code>
+append-and-<code>toString()</code> round trip; modern <code>javac</code> (post-JEP 280) instead
+emits an <code>invokedynamic</code> call to <code>StringConcatFactory</code>, which builds one
+optimized concatenation recipe at the call site — but inside a loop it
+still allocates and discards immutable string garbage every iteration,
+which is exactly why a single <code>StringBuilder</code> reused across iterations
+avoids that GC churn.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that builds a simple receipt: given parallel arrays of item
 names (<code>String[]</code>) and prices (<code>double[]</code>), use a <code>StringBuilder</code> to build a

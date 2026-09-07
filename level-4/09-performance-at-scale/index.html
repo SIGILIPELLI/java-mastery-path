@@ -2161,6 +2161,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2299,6 +2310,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2505,6 +2527,31 @@ abstraction: business logic doesn't know or care where the cache lives.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>JVM heap tuning under load is really about balancing three costs that
+trade off mechanically: a larger young generation means fewer, larger
+minor GC pauses; a target pause-time goal (G1's <code>-XX:MaxGCPauseMillis</code>)
+makes the collector shrink or grow the young generation between cycles
+to hit that target, at the cost of throughput if the goal is set too
+aggressively — there's no free tuning win, only a real Pareto frontier
+between throughput, pause time, and footprint that every collector
+navigates differently (G1 balances all three, ZGC/Shenandoah trade
+some throughput for near-zero pauses).</p>
+<p>Connection-pool and thread-pool sizing under load hits <strong>Little's
+Law</strong> mechanically: the number of concurrent requests a system can
+sustain equals throughput times average latency, so under-sizing a
+downstream connection pool doesn't just slow things down — once
+demand exceeds pool capacity, requests queue, latency rises, which
+(per Little's Law) increases the <em>effective</em> concurrent demand further,
+a real feedback loop that can cascade into full outage without any
+single component technically failing.</p>
+<p>Caching layers (Caffeine, an in-process cache) use a <strong>W-TinyLFU</strong>
+eviction policy — a frequency sketch estimating access counts with
+bounded memory (a count-min sketch) plus recency — specifically because
+naive LRU is provably vulnerable to one-time bulk scans evicting your
+actually-hot working set; understanding which eviction policy a cache
+uses is what determines whether it survives real production access
+patterns.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add <code>@Cacheable(value = "exchangeRates", key = "#currencyCode")</code> to a
 <code>CurrencyService.getRate(String currencyCode)</code> method, and a

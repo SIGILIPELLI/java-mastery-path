@@ -1560,6 +1560,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2357,6 +2368,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2612,6 +2634,29 @@ that you still need <code>synchronized</code> or an atomic class such as
 <p>The simplest way to avoid these problems entirely is to avoid shared mutable
 state: prefer immutable objects and confine mutable data to a single thread
 whenever you can.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Every Java object carries an implicit <strong>monitor</strong> (tied to its mark
+word) that <code>synchronized</code> acquires and releases. HotSpot optimizes this
+heavily: an uncontended lock uses <strong>biased or thin/lightweight
+locking</strong> — essentially a compare-and-swap on the mark word with no OS
+call involved — and only escalates to a full OS-level mutex ("inflated"
+lock, with genuine thread suspension via <code>park()</code>/<code>unpark()</code>) when
+contention is actually detected. This is why uncontended <code>synchronized</code>
+blocks are far cheaper than most people expect, and why the cost only
+shows up under real contention.</p>
+<p>The Java Memory Model (JLS §17.4) defines <strong>happens-before</strong> relationships,
+not just "locking prevents races" folklore: unlocking a monitor
+happens-before a subsequent lock of the <em>same</em> monitor by another
+thread; writing a <code>volatile</code> field happens-before a subsequent read of
+that same field. Without such an edge, the JIT and the CPU are both
+free to reorder, cache in registers, or never publish a write to another
+thread at all — which is the actual mechanical reason an unsynchronized
+flag-based loop can spin forever even though "the other thread clearly
+set it."</p>
+<p>Thread creation maps to a real OS thread (pre-virtual-threads Java) —
+each carries its own OS-allocated stack (<code>-Xss</code>), which is why
+thread-per-request models hit a ceiling in the thousands, long before
+CPU or heap becomes the bottleneck.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a <code>BankAccount</code> class with a private <code>long balanceCents</code> field and
 synchronized <code>deposit(long cents)</code> and <code>withdraw(long cents)</code> methods (the

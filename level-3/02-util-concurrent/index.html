@@ -1577,6 +1577,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2545,6 +2567,26 @@ thread pinning, and scaling patterns are covered in depth in Level 4.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>ConcurrentHashMap</code> (Java 8+) achieves high-concurrency reads/writes
+with <strong>no global lock</strong>: each bucket's head node is updated via CAS
+(compare-and-swap) for the common no-collision insert case, and only
+falls back to a <code>synchronized</code> block scoped to that single bin when a
+real collision occurs — contention on bucket A never blocks a thread
+touching bucket B, unlike a <code>Hashtable</code> or externally-synchronized
+<code>HashMap</code>, which serialize on one lock for the whole table.</p>
+<p><code>AtomicInteger</code> and friends aren't locks at all — they wrap a <code>volatile</code>
+field and use <code>Unsafe</code>/<code>VarHandle</code> <strong>compare-and-swap</strong> intrinsics that
+map directly to a single CPU instruction (<code>LOCK CMPXCHG</code> on x86). CAS
+loops ("read, compute, try to swap, retry on failure") avoid ever
+blocking a thread, but they can still livelock under extreme contention
+because every failed attempt means real, wasted work, not a queued wait.</p>
+<p><code>ExecutorService</code> thread pools reuse OS threads instead of paying
+creation/teardown cost per task; a bounded queue plus a
+<code>RejectedExecutionHandler</code> is what actually happens when submission
+outpaces worker capacity — the pool doesn't magically grow past its max
+size, it queues, then rejects, and understanding which of those three
+states you're in is the real skill in tuning one.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Using an <code>ExecutorService</code> with a fixed pool of 4 threads, submit 8 <code>Callable&lt;Integer&gt;</code>
 tasks that each compute the square of their index (0-7). Collect all 8

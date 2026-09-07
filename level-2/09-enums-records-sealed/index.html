@@ -1395,6 +1395,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2536,6 +2558,29 @@ for long <code>instanceof</code>/cast chains.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>An <code>enum</code> compiles to a real <code>final class</code> extending <code>java.lang.Enum</code>,
+with each constant becoming a <strong><code>public static final</code> field</strong> holding a
+singleton instance, all created once in a synthesized static
+initializer and stored in a hidden <code>values()</code> array. <code>switch</code> on an
+enum doesn't compare by name at runtime — the compiler generates a
+synthetic lookup table mapping each constant's <code>ordinal()</code> to a case
+index, which is why reordering enum constants can silently change
+<code>switch</code> behavior if code ever depended on ordinal values.</p>
+<p>Records are compiler-generated <strong>data carriers</strong>: declaring
+<code>record Point(int x, int y)</code> makes <code>javac</code> emit a final class with
+private final fields, a canonical constructor, accessor methods named
+exactly <code>x()</code>/<code>y()</code> (not <code>getX()</code>), plus <code>equals()</code>, <code>hashCode()</code>, and
+<code>toString()</code> implementations generated from the component list via an
+<code>invokedynamic</code>-based bootstrap (<code>ObjectMethods</code>) — the JVM builds these
+method bodies once, reflectively, from the record's component
+descriptors, rather than the compiler inlining boilerplate text.</p>
+<p><code>sealed</code> classes/interfaces attach a <code>PermittedSubclasses</code> attribute to
+the class file, checked by the verifier at <strong>class-loading time</strong> — it's
+not just a compiler suggestion; a rogue subclass added later that isn't
+in the permits list fails to link at runtime with an
+<code>IncompatibleClassChangeError</code> even if it compiles against an old
+version of the sealed type.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Define a sealed interface <code>PaymentMethod permits CreditCard, BankTransfer,
 Cash</code>, where <code>CreditCard</code> and <code>BankTransfer</code> are records (with fields like

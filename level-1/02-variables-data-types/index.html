@@ -801,6 +801,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2482,6 +2504,28 @@ lose data.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Primitives and references are laid out completely differently at runtime.
+A local variable of type <code>int</code> lives directly in a slot on the JVM's
+per-frame <strong>operand stack / local variable array</strong> — no boxing, no
+indirection, one word (or two, for <code>long</code>/<code>double</code>) of raw bits. A
+reference variable (<code>String</code>, any object type) is a pointer-sized slot
+holding the address of an object on the heap; the object itself carries a
+<strong>mark word</strong> (hash code, GC age, lock state) and a <strong>klass pointer</strong> back
+to its class metadata, ahead of its actual fields.</p>
+<p>This is why <code>int</code> arithmetic can never NPE but calling a method on an
+uninitialized <code>Integer</code> field can: an uninitialized primitive field is
+guaranteed zeroed at class-preparation time (the JVM spec mandates default
+values — <code>0</code>, <code>0.0</code>, <code>false</code>, <code>null</code>), but a <code>null</code> reference is a valid
+bit pattern, not a missing object, and dereferencing it triggers a
+hardware-level check the JIT inserts before every field access.</p>
+<p>Autoboxing (<code>Integer i = 5;</code>) compiles to an explicit <code>Integer.valueOf(5)</code>
+call. That method consults a <strong>cache of <code>Integer</code> objects from -128 to
+127</strong> (<code>IntegerCache</code>, populated once at class-init) — which is exactly
+why <code>Integer.valueOf(100) == Integer.valueOf(100)</code> is <code>true</code> but the same
+comparison at 200 is <code>false</code>: you're comparing cached-object identity,
+not value, and the cache boundary is a real, documented, JVM-internal
+detail rather than a coincidence.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that declares an <code>int</code> for a number of items, a <code>double</code> for
 a price per item, computes the total as a <code>double</code>, and prints it formatted to

@@ -2105,6 +2105,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2240,6 +2251,17 @@
     <span class="md-ellipsis">
       
         Distributed tracing basics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -2467,6 +2489,27 @@ logs reconstructs the whole request's path.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Micrometer instrumentation works by maintaining in-process counters/
+timers/gauges as plain Java objects updated on the hot path (an
+<code>AtomicLong</code> increment for a counter, a <code>LongAdder</code>-backed histogram
+bucket for a timer) — the actual export to Prometheus/etc. happens on a
+<strong>separate scrape thread pulling a snapshot</strong>, not by pushing metrics
+synchronously on every request, which is why metrics collection has
+near-zero latency impact on request handling itself.</p>
+<p>Distributed tracing (OpenTelemetry) propagates a <strong>trace context</strong>
+(trace ID + span ID) through HTTP headers (<code>traceparent</code>) across service
+boundaries; each service creates a child span linked to the parent ID it
+received, and the actual "distributed" trace only exists after a
+collector backend stitches spans from multiple services back together
+by shared trace ID — no single service ever sees the whole trace, only
+its own span plus the IDs needed to link it.</p>
+<p>Structured logging correlates with traces via MDC (Mapped Diagnostic
+Context) — a <strong>thread-local map</strong> the logging framework reads on every
+log statement to inject fields like <code>traceId</code> into each log line; this
+is why MDC values silently disappear across thread hand-offs (e.g. into
+a thread pool or a reactive scheduler) unless the framework explicitly
+propagates the thread-local context along with the task.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add a <code>Counter</code> named <code>orders.cancelled</code> and a <code>Timer</code> named
 <code>orders.cancellation.duration</code> to a <code>CancellationMetrics</code> component, and

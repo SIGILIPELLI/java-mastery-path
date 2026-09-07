@@ -958,6 +958,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2269,6 +2280,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2432,6 +2454,27 @@ cleanup (closing files, releasing resources).</p>
 <p>Custom exception classes (extending <code>Exception</code> or <code>RuntimeException</code>) are
 covered in <a href="../../level-2/05-exceptions-advanced/">Level 2</a>, along with
 try-with-resources for automatic cleanup.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A <code>try</code>/<code>catch</code> block doesn't cost anything when no exception is thrown:
+the compiler emits an <strong>exception table</strong> attached to the method — a list
+of <code>(start_pc, end_pc, handler_pc, catch_type)</code> ranges — rather than any
+runtime check. Throwing an exception is what's expensive: <code>throw</code>
+triggers <code>Throwable</code>'s constructor to call <code>fillInStackTrace()</code>, a native
+method that walks every frame on the current thread's call stack and
+snapshots it, which is real, non-trivial work (this is why throwing
+exceptions for ordinary control flow is a measurable performance
+mistake, not just a style complaint).</p>
+<p>When an exception propagates, the JVM doesn't unwind gently — the
+interpreter/JIT-compiled code checks the current method's exception table
+for a matching <code>handler_pc</code>; if none matches, the frame is popped
+entirely and the search continues in the caller's exception table, all
+the way up until a handler is found or the thread dies with an uncaught
+exception handler print.</p>
+<p>Checked vs. unchecked is a <strong>compile-time-only</strong> distinction — nothing
+in the bytecode or the JVM itself treats <code>IOException</code> differently from
+<code>RuntimeException</code>; <code>javac</code> alone enforces that checked exceptions
+appear in a <code>throws</code> clause or get caught, which is why reflection can
+freely throw a checked exception from a method that doesn't declare it.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a method <code>safeDivide(int a, int b)</code> that returns the division result, but
 catches <code>ArithmeticException</code> internally and returns <code>0</code> instead of crashing

@@ -1339,6 +1339,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2575,6 +2597,26 @@ class matching JUnit's naming/annotation conventions and reports a summary —
 the same <code>mvn</code> lifecycle introduced in
 <a href="../../level-1/09-packages-build-tools/">Level 1, Module 9</a> and expanded on in
 <a href="../08-build-tools/">Module 8</a>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>JUnit 5 discovers and runs <code>@Test</code> methods entirely through
+<strong>reflection</strong>: the platform's launcher scans compiled classes for the
+<code>@Test</code> annotation (itself a runtime-retained annotation, stored as an
+attribute in the class file and read back via <code>Class.getAnnotations()</code>),
+builds an execution plan of <code>TestDescriptor</code> nodes, and invokes each
+method with <code>Method.invoke()</code> on a fresh instance — JUnit 5 creates a
+<strong>new test-class instance per test method</strong> by default specifically so
+mutable instance state from one test can't leak into another.</p>
+<p><code>@BeforeEach</code>/<code>@AfterEach</code> aren't magic hooks the JVM knows about —
+they're plain annotated methods that JUnit's <code>TestExtensionContext</code>
+machinery looks up via reflection and calls, wrapped around your actual
+test invocation, all still just ordinary method calls from JUnit's own
+code, not a JVM feature.</p>
+<p>Assertion failures work by throwing <code>AssertionError</code> (unchecked, extends
+<code>Error</code> not <code>Exception</code>, signaling "this is not something you're meant
+to catch") — JUnit's test runner specifically catches <code>Throwable</code> around
+each invocation and classifies <code>AssertionError</code> as a failure versus any
+other exception as an error, which is a design choice in the test
+framework, not a distinction the JVM itself enforces.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a <code>StringUtils</code> class with a static method <code>isPalindrome(String s)</code>
 that returns <code>true</code> if <code>s</code> reads the same forwards and backwards (case-

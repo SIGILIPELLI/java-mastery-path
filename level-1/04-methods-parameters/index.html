@@ -857,6 +857,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2432,6 +2454,27 @@ exist first.</p>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="c1">// inner is NOT visible here -- out of scope</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Every method call pushes a new <strong>stack frame</strong> — its own local variable
+array, operand stack, and reference to the constant pool — onto the
+calling thread's call stack. Arguments are passed <strong>by value</strong>, always:
+for a primitive that's a copy of the bits; for an object reference that's
+a copy of the <em>pointer</em>, which is why mutating an object through a
+parameter is visible to the caller (same object) but reassigning the
+parameter itself is not (you only repointed your local copy).</p>
+<p>Overload resolution (<code>invokevirtual</code> target selection when multiple
+methods share a name) happens <strong>entirely at compile time</strong> based on the
+static types of the arguments — the compiler picks the most specific
+applicable overload and bakes that exact method descriptor into the
+<code>invoke*</code> instruction's constant-pool entry. This is why passing <code>null</code>
+to two same-named overloads that both accept reference types is
+ambiguous at compile time even though it would be perfectly resolvable
+at runtime.</p>
+<p>Recursive calls consume stack frames linearly; the JVM does <strong>not</strong>
+perform tail-call optimization (unlike some other JVM languages' own
+compilers), so deep unbounded recursion in Java always risks
+<code>StackOverflowError</code> — a real, fixed-size limit (<code>-Xss</code>, default around
+512KB–1MB per thread) rather than a soft warning.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a class <code>Calculator</code> with overloaded static methods <code>add</code> for two <code>int</code>s,
 two <code>double</code>s, and three <code>int</code>s. Add an instance method <code>remember(int value)</code>

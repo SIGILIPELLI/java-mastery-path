@@ -2088,6 +2088,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2262,6 +2273,17 @@
     <span class="md-ellipsis">
       
         CI/CD with GitHub Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -2465,6 +2487,30 @@ to the workflow file (see <a href="../05-security-best-practices/">Module 5</a>)
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A Docker container is not a lightweight VM — it's an ordinary Linux
+process given the illusion of isolation via <strong>namespaces</strong> (separate
+PID, network, mount, and user views) and resource limits enforced by
+<strong>cgroups</strong> (CPU shares, memory ceilings). This is exactly why a JVM
+running inside a container historically miscalculated available memory
+(it saw the <em>host's</em> total RAM before container-awareness was added to
+the JVM) and why <code>-XX:MaxRAMPercentage</code> and container-aware JVM defaults
+(standard since Java 10+) matter: the JVM now reads the cgroup memory
+limit, not <code>/proc/meminfo</code>, to size its heap.</p>
+<p>Layered images work because each Dockerfile instruction produces an
+immutable, content-hashed <strong>filesystem layer</strong>, and Docker caches and
+reuses layers unchanged since the last build — this is the actual
+mechanism behind the advice to copy <code>pom.xml</code>/dependencies before
+application source in a Dockerfile: dependency-resolution layers stay
+cached across builds where only source changed, avoiding a full
+re-download every build.</p>
+<p>Kubernetes liveness/readiness probes are literal periodic HTTP/TCP
+checks the kubelet performs against your pod — a failed liveness probe
+triggers a container restart via the container runtime, while a failed
+readiness probe only removes the pod from the Service's load-balanced
+endpoint set without restarting it, a distinction that maps directly
+onto "is this instance broken" versus "is this instance temporarily not
+ready for traffic."</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Extend the <code>Dockerfile</code> above with a <code>HEALTHCHECK</code> instruction that curls
 <code>/actuator/health</code> every 30 seconds (see <a href="../08-observability/">Module 8</a> for

@@ -2043,6 +2043,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2456,6 +2478,28 @@ injection, broken authentication, sensitive data exposure, security
 misconfiguration, and others covered above among them. Treat it as a
 checklist to review against before shipping anything that accepts external
 input.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>BCrypt-style password hashing is deliberately <strong>slow by design</strong>: it
+runs a Blowfish-derived key schedule through a configurable number of
+rounds (the "cost factor"), each doubling the work — the point is to
+make brute-forcing a stolen hash database computationally expensive per
+guess, unlike a fast hash (MD5/SHA-256) which an attacker can test at
+billions of guesses per second on commodity GPUs. The salt embedded in
+the BCrypt output isn't secret — its entire purpose is to force an
+attacker to redo the expensive computation per password even for
+identical passwords, defeating precomputed rainbow tables.</p>
+<p>Spring Security's filter chain is a literal <code>List&lt;Filter&gt;</code> wrapping the
+servlet container's own filter mechanism — every request runs through
+an ordered chain (CSRF check, authentication, authorization) <em>before</em>
+your controller method is even reached, each filter able to short-
+circuit the chain and commit a response (a 401/403) without your
+application code ever running.</p>
+<p>JWTs are <strong>signed, not encrypted</strong>, by default: the payload (claims) is
+just base64url-encoded JSON, readable by anyone who intercepts the
+token; the signature (HMAC or RSA/ECDSA over header+payload) only lets
+the server detect tampering — this is the mechanical reason putting
+secrets or PII directly in JWT claims is a real vulnerability, not a
+style nitpick.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Add Bean Validation annotations to a <code>RegisterDeviceRequest</code> record with
 fields <code>deviceId</code> (must not be blank), <code>ownerEmail</code> (must be a valid email),

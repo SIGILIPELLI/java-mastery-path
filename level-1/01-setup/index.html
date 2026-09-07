@@ -773,6 +773,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2409,6 +2431,33 @@ excellent Java-specific tooling and refactoring), <strong>VS Code</strong> with 
 "Extension Pack for Java" (free, lightweight), or Eclipse. IntelliJ is the most
 common choice for serious Java work — pick one and move on, since the editor
 matters far less than practice.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>javac</code> doesn't produce machine code — it produces <strong>bytecode</strong>, a compact
+stack-based instruction set stored in a <code>.class</code> file as a sequence of
+constant-pool entries, method descriptors, and opcodes (<code>invokestatic</code>,
+<code>getstatic</code>, <code>areturn</code>, and so on). When you run <code>java Hello</code>, three things
+happen before your first line executes:</p>
+<ol>
+<li><strong>Class loading</strong> — the bootstrap/platform/application class loaders (a
+   parent-delegating hierarchy) locate <code>Hello.class</code> on the classpath, read
+   the class file, and build an internal <code>Klass</code> metadata structure in the
+   JVM's method area (part of metaspace, native memory since Java 8).</li>
+<li><strong>Linking</strong> — <em>verification</em> walks every method's bytecode with a
+   dataflow analyzer to prove type-safety (no stack underflow, no jumping
+   into the middle of an instruction, no assigning an <code>Object</code> where an
+   <code>int</code> is expected) without executing anything; <em>preparation</em> zeroes
+   static fields; <em>resolution</em> lazily turns symbolic constant-pool
+   references into direct pointers the first time they're used.</li>
+<li><strong>Initialization</strong> — runs <code>&lt;clinit&gt;</code>, the synthesized static
+   initializer, exactly once, under a per-class lock, guaranteeing every
+   other thread that later touches the class sees a fully initialized one.</li>
+</ol>
+<p><code>public static void main(String[] args)</code> is not a convention the JVM
+merely likes — the launcher reflectively looks up a method with that exact
+signature and modifiers via <code>Class.getMethod("main", String[].class)</code> and
+invokes it with <code>invokestatic</code>; get the signature wrong and you get
+<code>NoSuchMethodError</code>, not a compiler error, because nothing stops you from
+compiling a class without a <code>main</code> at all.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program <code>Greeter.java</code> with a <code>main</code> method that prints a greeting for
 three different names, one per line, using <code>System.out.println</code>. Then compile

@@ -1695,6 +1695,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2487,6 +2509,29 @@ HTTP calls — no third-party library needed for basic use.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>Socket</code>/<code>ServerSocket</code> are thin Java wrappers around the OS's <strong>BSD
+socket API</strong> — <code>connect()</code>, <code>bind()</code>, <code>accept()</code>, <code>read()</code>/<code>write()</code> all
+eventually call into native code that issues the corresponding syscalls.
+A blocking <code>accept()</code> call parks the calling thread (no CPU spin) until
+the OS kernel completes a TCP three-way handshake and hands back a
+connected file descriptor — which is why a naive thread-per-connection
+server scales only to as many OS threads as the machine can schedule,
+not further.</p>
+<p>TCP's stream abstraction means a single <code>write()</code> on one end can arrive
+as multiple <code>read()</code>s on the other, or multiple writes can coalesce into
+one read — TCP has <strong>no built-in message framing</strong>, only a reliable
+ordered byte stream (Nagle's algorithm and the kernel's send/receive
+buffers actively encourage coalescing for throughput). This is the
+actual mechanical reason application protocols need explicit
+length-prefixing or delimiters; the socket API will never do that for
+you.</p>
+<p><code>java.nio</code>'s <code>Selector</code>-based non-blocking I/O maps to the OS's
+readiness-notification APIs (<code>epoll</code> on Linux, <code>kqueue</code> on macOS) — one
+thread can poll thousands of sockets by asking the kernel "which of
+these are ready?" instead of blocking per-socket, which is the
+foundation non-blocking servers (and reactive frameworks like Netty)
+build their scalability on.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that uses <code>HttpClient</code> to send a GET request to
 <code>https://jsonplaceholder.typicode.com/todos/1</code>, prints the HTTP status code,

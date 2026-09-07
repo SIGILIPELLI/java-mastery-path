@@ -1193,6 +1193,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2379,6 +2390,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2689,6 +2711,27 @@ condition.</p>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Found Rex the dog!&quot;</span><span class="p">);</span>
 <a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Interface method dispatch uses a <strong>different bytecode instruction</strong>
+(<code>invokeinterface</code>) than class method dispatch (<code>invokevirtual</code>), because
+a class can implement many interfaces and the JVM can't assume a single
+flat vtable slot works across all of them. Historically <code>invokeinterface</code>
+required a linear search through the implementing class's interface
+method table (itable) at every call; modern HotSpot caches the resolved
+method via inline caches so repeated calls on the same receiver type are
+fast, but a megamorphic call site (many different implementing classes
+hitting the same call site) can still fall back to a slower search.</p>
+<p><code>abstract</code> classes and interfaces differ at the bytecode level too: an
+abstract method has no <code>Code</code> attribute at all — calling it directly
+would be a <code>AbstractMethodError</code> if the JVM ever tried, but the compiler
+guarantees you can only call it through a reference whose <em>actual</em>
+runtime type provides an implementation, checked via the vtable/itable
+lookup, not by inspecting the abstract declaration.</p>
+<p><code>super.method()</code> bypasses virtual dispatch on purpose: it compiles to
+<code>invokespecial</code> with the superclass as the explicit target, which is
+exactly why overriding a method and having it call <code>super.method()</code>
+doesn't recurse infinitely through the vtable — it's a direct, resolved,
+non-polymorphic call to one specific class's implementation.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Design an interface <code>Discountable</code> with one method <code>double discountedPrice()</code>.
 Create an abstract class <code>Product</code> with fields <code>name</code> and <code>price</code>, a

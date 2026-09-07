@@ -1801,6 +1801,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2559,6 +2581,30 @@ avoidable sources of quadratic behavior in otherwise-correct code — e.g.
 calling <code>list.contains(x)</code> inside a loop over a large <code>ArrayList</code> turns an
 O(n) task into O(n²), whereas the same check against a <code>HashSet</code> stays O(n)
 overall.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>HotSpot's name is literal: the interpreter runs bytecode directly at
+first, while a background thread counts method invocations and loop
+back-edges; once a method crosses a threshold it's compiled by the
+<strong>C1 (client) compiler</strong> for fast, lightly-optimized native code, and if
+it stays hot, later recompiled by <strong>C2 (server)</strong> with aggressive
+optimizations — inlining, escape analysis, loop unrolling — informed by
+actual runtime profile data (branch frequencies, observed types at call
+sites) that a purely static compiler could never have. This is why a
+Java benchmark's first few thousand iterations are typically much slower
+than its steady state, and why microbenchmarks without a JIT warm-up
+phase (JMH exists specifically to handle this correctly) produce
+misleading numbers.</p>
+<p><strong>Escape analysis</strong> lets C2 prove an object never leaves the current
+method/thread and, when it can, allocate it on the stack (or eliminate
+the allocation entirely, "scalar replacement") instead of the heap —
+real, load-bearing optimization, not a JIT curiosity, and one reason
+"avoid allocation" advice is less absolute in Java than in
+non-JIT'd languages.</p>
+<p>A profiler like async-profiler samples real stack traces using
+safepoint-biased or (better) <strong>AsyncGetCallTrace</strong>/perf-event-based
+sampling to avoid the classic safepoint bias where naive JVM profilers
+only ever see threads paused at safepoints, systematically
+under-sampling code that runs between safepoint polls.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a benchmark comparing <code>ArrayList.contains()</code> against <code>HashSet.contains()</code>
 when checking membership of 10,000 lookups against a collection of 20,000

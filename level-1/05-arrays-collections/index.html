@@ -908,6 +908,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2337,6 +2348,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2491,6 +2513,26 @@ add or remove elements. It holds objects, so primitives are auto-boxed (see
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A Java array is a genuine, contiguous, fixed-length memory block with a
+hidden <code>length</code> field baked into the object header alongside the mark
+word and klass pointer — that's why <code>array.length</code> is a field access
+(<code>arraylength</code> opcode), not a method call, and O(1) regardless of size.
+Element access compiles to <code>iaload</code>/<code>aaload</code> plus an implicit <strong>bounds
+check</strong> the JVM inserts on every access; the JIT can often eliminate
+repeated bounds checks inside a loop once it proves the index stays
+within <code>[0, length)</code> (range-check elimination), which is a big chunk of
+why array loops are fast.</p>
+<p>Arrays are also <strong>covariant but not truly type-safe</strong> at the array level:
+<code>Object[] os = new String[3];</code> compiles fine, but writing a non-<code>String</code>
+into <code>os</code> throws <code>ArrayStoreException</code> at runtime because every array
+carries its actual component type and the JVM checks it on every
+reference-type store (<code>aastore</code>), not just at creation.</p>
+<p><code>ArrayList</code> wraps a plain <code>Object[]</code> internally. Growth is not
+"infinite" — it reallocates to <code>oldCapacity + (oldCapacity &gt;&gt; 1)</code> (1.5x)
+and <code>System.arraycopy</code>s (a JVM intrinsic, often a single vectorized
+memcpy) the old contents into the new backing array, which is why
+appending is amortized O(1) but occasionally O(n) on a resize.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that stores five student names in an <code>ArrayList&lt;String&gt;</code> and
 five corresponding scores in an <code>int[]</code> array. Print each name alongside its

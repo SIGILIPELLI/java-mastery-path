@@ -2071,6 +2071,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2503,6 +2525,29 @@ a queue and the broker pushes messages to them.</p>
 </table>
 <p>See <a href="../02-microservices-architecture/">Module 2</a> for how Saga choreography
 commonly rides on top of this kind of event backbone.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Kafka's durability guarantee comes from an <strong>append-only log</strong> on disk
+per partition — producers append sequentially (cheap, sequential disk
+I/O even on spinning disks), consumers track their own read offset into
+that log independently, and a message isn't "consumed" in the sense of
+being removed; it just sits until a retention policy expires it, which
+is precisely why multiple independent consumer groups can each replay
+the same topic from different offsets without interfering with each
+other.</p>
+<p>Partitioning determines both parallelism and ordering: Kafka guarantees
+message order <strong>only within a single partition</strong>, and the default
+partitioner hashes the message key to pick a partition deterministically
+— which is why choosing a key with the right cardinality (e.g. customer
+ID) is what actually gives you "all events for this customer arrive in
+order," not a broker-level global guarantee.</p>
+<p>At-least-once vs. exactly-once delivery is fundamentally about <strong>where
+the offset commit happens relative to processing</strong>: committing the
+consumer offset before processing risks losing a message on crash
+(at-most-once); committing after risks reprocessing on crash
+(at-least-once, the common default); genuine exactly-once semantics
+require an idempotent producer plus transactional writes that atomically
+commit the offset and the produced output together — a real protocol
+feature (Kafka transactions), not just careful application code.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a Kafka producer that publishes a <code>PaymentReceived</code> JSON event (fields:
 <code>orderId</code>, <code>amount</code>, <code>receivedAt</code>) to a topic named <code>payment-events</code>, keyed

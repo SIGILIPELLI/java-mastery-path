@@ -1255,6 +1255,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2577,6 +2599,31 @@ up the pipeline description ("lazy evaluation").</p>
 </code></pre></div>
 <p>Records (used for <code>Employee</code> above) are covered fully in
 <a href="../09-enums-records-sealed/">Module 9</a>.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>A lambda expression does <strong>not</strong> compile to an anonymous inner class.
+<code>javac</code> emits an <code>invokedynamic</code> instruction whose bootstrap method
+(<code>LambdaMetafactory.metafactory</code>) is invoked once, lazily, the first
+time that lambda expression is reached — it generates a small hidden
+class implementing the target functional interface, wires it up via a
+<code>MethodHandle</code> to your lambda body (compiled as a private synthetic
+method), and caches the generated <code>CallSite</code> so subsequent hits are just
+a direct call. This is why lambdas have near-zero per-call overhead
+after the first invocation but a one-time class-generation cost, and why
+they show up as synthetic <code>$$Lambda</code> classes rather than
+<code>OuterClass$1</code>-style anonymous classes in a stack trace.</p>
+<p><code>Stream</code> pipelines are <strong>lazy and single-pass</strong>: intermediate operations
+(<code>map</code>, <code>filter</code>) just build up a chain of <code>Sink</code> objects; nothing
+executes until a terminal operation (<code>collect</code>, <code>forEach</code>, <code>reduce</code>)
+pulls elements through the whole chain one at a time. This lets
+<code>stream().filter(...).map(...).findFirst()</code> short-circuit after
+processing a single element instead of materializing an intermediate
+collection at every stage — a real fusion optimization, not just
+readable syntax.</p>
+<p><code>parallelStream()</code> splits work using the common <code>ForkJoinPool</code>
+(work-stealing deques across CPU cores) via a <code>Spliterator</code>'s
+<code>trySplit()</code>, which is why parallel streams help on CPU-bound,
+splittable, large workloads and actively hurt on small or I/O-bound ones
+— the fork/join overhead and shared-pool contention outweigh the gain.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Given a <code>List&lt;String&gt;</code> of product names with mixed casing and some
 duplicates, use a stream pipeline to: remove duplicates, filter out any name

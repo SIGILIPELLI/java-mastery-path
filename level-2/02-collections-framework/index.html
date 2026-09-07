@@ -1221,6 +1221,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2379,6 +2390,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2651,6 +2673,27 @@ key) — but you can stream a map's <code>entrySet()</code> and sort that.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>HashMap</code> stores entries in an array of buckets sized to a <strong>power of
+two</strong>, and the bucket index is <code>(n - 1) &amp; hash</code>, where <code>hash</code> first
+XORs the key's <code>hashCode()</code> with its own upper 16 bits shifted down
+(<code>h ^ (h &gt;&gt;&gt; 16)</code>) specifically to spread entropy from high bits into
+the low bits that the power-of-two mask actually uses — a deliberate
+mitigation against hash codes that only vary in high bits. Since Java 8,
+a bucket that accumulates 8+ colliding entries (and the table is large
+enough) is converted from a linked list to a <strong>red-black tree</strong>,
+turning worst-case O(n) lookup into O(log n) — a real, measurable
+defense against hash-flooding.</p>
+<p>Resizing doubles the bucket array and <strong>rehashes every entry</strong> — an
+O(n) operation triggered once the size exceeds <code>capacity * loadFactor</code>
+(default 0.75) — which is why pre-sizing a <code>HashMap</code> when you know the
+element count avoids repeated resize-and-rehash passes.</p>
+<p><code>ConcurrentModificationException</code> isn't a lock — iterators track a
+<code>modCount</code> field on the collection, captured when the iterator is
+created; every structural mutation increments it, and each <code>next()</code> call
+compares counts and fails fast if they diverge. It's a best-effort bug
+detector, not a correctness guarantee, and it can miss concurrent
+mutations entirely under race conditions.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Create a <code>Student</code> class with <code>name</code> (String) and <code>gpa</code> (double), implementing
 <code>Comparable&lt;Student&gt;</code> by natural order of GPA descending (highest GPA first).

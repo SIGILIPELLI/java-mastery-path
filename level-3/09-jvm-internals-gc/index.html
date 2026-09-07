@@ -1773,6 +1773,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2335,6 +2346,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2544,6 +2566,31 @@ changes needed:</p>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>jcmd<span class="w"> </span>&lt;pid&gt;<span class="w"> </span>GC.run<span class="w">            </span><span class="c1"># request a full garbage collection</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>jcmd<span class="w"> </span>&lt;pid&gt;<span class="w"> </span>VM.flags<span class="w">          </span><span class="c1"># show the JVM flags currently in effect</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The heap is generationally split because most objects die young (the
+"weak generational hypothesis"): the <strong>young generation</strong> (Eden + two
+Survivor spaces) is collected frequently with a fast copying collector
+— live objects are copied between Survivor spaces and get their
+<strong>age</strong> incremented in the object header each survived cycle, promoted
+to the <strong>old generation</strong> once they cross a tenuring threshold. This
+generational split is why minor GCs are typically sub-millisecond to a
+few milliseconds while full/major GCs (scanning the much larger old
+generation) can pause for much longer.</p>
+<p>G1 (the default collector since Java 9) divides the heap into fixed-size
+<strong>regions</strong> instead of contiguous generations, tracks "remembered sets"
+(which regions hold references into which other regions) to avoid
+scanning the whole heap for roots, and picks the regions with the most
+garbage to collect first ("garbage-first") to hit a target pause-time
+goal rather than a fixed heap-size trigger. ZGC/Shenandoah go further,
+doing almost all marking and relocation <strong>concurrently with application
+threads</strong>, using colored pointers or load barriers so a thread reading a
+reference to a moved object gets redirected on the fly instead of the
+world stopping.</p>
+<p>Object headers matter beyond GC: the <strong>mark word</strong> also encodes lock
+state (unlocked/biased/thin/fat) and identity hash code, which is why
+calling <code>System.identityHashCode()</code> on an object can force the JVM to
+materialize a hash into the header it might otherwise never need to
+compute.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a program that builds a <code>List&lt;byte[]&gt;</code>, repeatedly adding a new 1 MB
 <code>byte[]</code> array in a loop, printing the iteration count every 50 iterations.

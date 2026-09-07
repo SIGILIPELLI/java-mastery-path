@@ -1628,6 +1628,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2269,6 +2280,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2504,6 +2526,31 @@ just depends on the <code>DiscountStrategy</code> interface.</p>
 </tr>
 </tbody>
 </table>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Every pattern built around polymorphic dispatch (Strategy, Observer,
+Template Method, Decorator) is ultimately leaning on the same JVM
+mechanism: <strong><code>invokevirtual</code>/<code>invokeinterface</code> resolving through a
+vtable/itable at the call site based on the object's actual runtime
+class</strong>, not its declared type. The pattern's "magic" — swapping
+behavior by swapping an object — is just this dispatch mechanism used
+deliberately.</p>
+<p>Singleton implemented as an <code>enum</code> (the recommended form since
+<em>Effective Java</em>) isn't a style preference — it's the only approach the
+JVM guarantees is safe against both <strong>reflection-based re-instantiation</strong>
+(the JVM's serialization/deserialization and reflection machinery treat
+enum constants specially and refuse to construct duplicates) and
+double-checked-locking's classic Java Memory Model pitfall (a
+non-<code>volatile</code> lazily-initialized singleton reference can be observed
+partially-constructed by another thread due to reordering, unless the
+field is <code>volatile</code> — establishing the happens-before edge the JMM
+requires).</p>
+<p>Proxy-based patterns (Decorator done via dynamic proxy, or how Spring
+AOP implements method interception) use <code>java.lang.reflect.Proxy</code>,
+which generates an actual <strong>bytecode-level class at runtime</strong>
+implementing the target interfaces and routing every call through your
+<code>InvocationHandler</code> — real class generation and loading, not
+interpretation, which is why the first call through a fresh proxy pays
+a one-time class-generation cost.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Implement the Strategy pattern for a <code>SortingStrategy</code> interface with a
 single method <code>int[] sort(int[] data)</code>. Provide two implementations —

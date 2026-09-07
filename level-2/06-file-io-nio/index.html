@@ -1300,6 +1300,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2496,6 +2518,27 @@ files:</p>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">CREATE</span><span class="p">,</span><span class="w"> </span><span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">APPEND</span>
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">);</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Classic <code>java.io</code> streams are <strong>byte-at-a-time blocking</strong> abstractions
+over OS file descriptors — every unbuffered <code>read()</code> is a system call,
+which is why wrapping in <code>BufferedInputStream</code>/<code>BufferedReader</code> matters:
+it batches many logical reads into far fewer syscalls by filling an
+internal byte array once and serving subsequent reads from memory.</p>
+<p><code>java.nio</code> channels work differently: they're built around
+<strong><code>ByteBuffer</code></strong>, a fixed-capacity block of memory with position/limit/
+capacity markers, and channels can transfer data directly between a file
+and a buffer without the byte-by-byte copying overhead of streams.
+<code>FileChannel.map()</code> goes further and uses <code>mmap()</code> to map a file region
+directly into the process's virtual address space — reads and writes
+become plain memory accesses the OS page cache satisfies, with no
+explicit read/write syscall per access, which is why memory-mapped I/O
+dramatically outperforms stream I/O for large, randomly-accessed files.</p>
+<p><code>Files.readAllLines()</code> and NIO's <code>WatchService</code> (for directory-change
+notification) both rely on native OS APIs under a uniform Java API —
+<code>WatchService</code> on Linux is backed by <code>inotify</code>, on macOS by <code>FSEvents</code>
+via a polling/kqueue bridge — meaning latency and exact semantics (e.g.
+whether a rename fires two events or one) are genuinely OS-dependent
+even though the Java code is portable.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a method <code>logMessage(String message)</code> that appends <code>message</code> plus a
 timestamp-free newline to a file <code>app.log</code>, creating the file (and a <code>logs/</code>

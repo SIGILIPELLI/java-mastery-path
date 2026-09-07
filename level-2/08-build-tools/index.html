@@ -1345,6 +1345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2291,6 +2302,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2545,6 +2567,27 @@ rough Gradle equivalent of the JUnit-enabled <code>pom.xml</code> from
 <p>Both download dependencies from the same shared repository (Maven Central)
 and solve the same underlying problem — the choice is largely ecosystem and
 team convention.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Maven's dependency resolution builds a full <strong>dependency graph</strong>, not a
+flat list — when two dependencies transitively pull in different
+versions of the same library, Maven's "nearest wins" rule (shortest path
+in the graph, ties broken by declaration order) picks exactly one
+version, and every one of your compiled classes that reference that
+library get linked against whichever version wins, silently, at build
+time — this is the mechanical root cause of dependency-version
+conflicts that surface only at runtime as <code>NoSuchMethodError</code> when the
+resolved JAR is missing a method your code was compiled against.</p>
+<p>Gradle's incremental build model is why it's typically faster on
+repeated builds: each task declares its inputs/outputs, and Gradle
+hashes them to build a task graph, skipping any task whose inputs are
+unchanged since the last run (<code>UP-TO-DATE</code>) — genuinely reusing prior
+work rather than a caching illusion, and it can go further with a build
+cache keyed on those same input hashes, sharing results across machines.</p>
+<p>Both tools ultimately just orchestrate <code>javac</code> (or a compiler daemon
+that keeps the compiler warm across builds to skip JVM startup cost) and
+package the resulting <code>.class</code> files into a JAR — the build tool adds
+dependency resolution and lifecycle sequencing on top of primitives you
+could still run by hand with <code>javac</code>/<code>jar</code>.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Take the <code>pom.xml</code> from <a href="../07-junit-testing/">Module 7</a> and add a second
 dependency for the Guava library (<code>com.google.guava:guava:33.0.0-jre</code>) with

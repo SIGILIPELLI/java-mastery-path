@@ -1272,6 +1272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exercise" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2505,6 +2527,26 @@ as a <strong>suppressed exception</strong> rather than silently lost:</p>
 <a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="p">}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>Multi-catch (<code>catch (IOException | SQLException e)</code>) compiles to a
+<strong>single exception-table entry per alternative type</strong>, all pointing at
+the same handler bytecode — the JVM doesn't merge the types into
+anything new, which is exactly why the compiler forbids you from
+reassigning <code>e</code> inside a multi-catch block (its static type is the
+least upper bound of the alternatives, and it's implicitly <code>final</code>).</p>
+<p>Try-with-resources desugars into a <code>try</code>/<code>finally</code> with an extra
+hidden <strong>suppressed-exception path</strong>: if the try block throws and the
+<code>close()</code> call in the compiler-generated <code>finally</code> <em>also</em> throws, the
+close-time exception is attached to the original via
+<code>addSuppressed()</code>/<code>getSuppressed()</code> rather than replacing it — a real
+bytecode-level accommodation (added in Java 7) so you never silently
+lose the original failure to a masking <code>close()</code> error.</p>
+<p>Custom exception hierarchies interact with the exception table's
+<code>catch_type</code> matching, which the JVM performs via <strong>class-hierarchy
+<code>instanceof</code>-style checks</strong> at each table entry in declaration order —
+which is why a broader catch clause (e.g. <code>catch (Exception e)</code>) placed
+before a narrower one is a compile error: the compiler can prove the
+narrower handler would be unreachable dead code.</p>
 <h2 id="exercise">Exercise<a class="headerlink" href="#exercise" title="Permanent link">&para;</a></h2>
 <p>Write a custom checked exception <code>InvalidTemperatureException</code> with a message
 constructor. Write a class <code>Thermostat</code> whose <code>setTemperature(double degrees)</code>
