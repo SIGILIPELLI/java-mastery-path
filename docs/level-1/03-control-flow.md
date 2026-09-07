@@ -113,6 +113,31 @@ for (int i = 0; i < 10; i++) {
 | `for` | repeat a known number of times, or with an index |
 | for-each | iterate every element of an array/collection |
 
+## How It Actually Works
+
+Every `if`/`else`, `while`, and `for` you write compiles down to
+**conditional jump bytecodes** operating on the operand stack —
+`if_icmpge`, `ifeq`, `goto` — there is no structured-control-flow concept
+inside the class file at all; it's all comparisons and jumps to byte
+offsets, exactly like assembly. The compiler's job is to turn nested
+braces into a flat, jump-target-labeled instruction stream.
+
+The JIT compiler treats loop bodies specially: methods with hot loops can
+get **on-stack replacement (OSR)** — the JVM compiles just that loop to
+native code and transplants the interpreter's live locals into the
+compiled frame *while the loop is still running*, without waiting for the
+method to be called again. This is why a single long-running loop in
+`main` can still benefit from JIT optimization even though `main` itself
+is called only once.
+
+`switch` on a `String` is not a special bytecode — the compiler
+desugars it into two nested switches: the first switches on
+`String.hashCode()` (a fast `tableswitch`/`lookupswitch` over ints), and
+inside each hash bucket a chain of `.equals()` calls disambiguates
+collisions before jumping to the matching case body. That's why
+`hashCode()` consistency matters even though you never call it directly
+in a `switch` statement.
+
 ## Exercise
 
 Write a program that loops from 1 to 100 and, for each number: prints "Fizz"

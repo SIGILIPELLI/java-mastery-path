@@ -189,6 +189,33 @@ API fundamentals these services are built on, and
 [Module 6](06-messaging-event-driven.md) for the event backbone that saga
 choreography and service-to-service events typically run on.
 
+## How It Actually Works
+
+Each service instance is a separate JVM process with its own heap, GC,
+and class loader hierarchy — there is no shared object graph or shared
+memory the way there is between classes in one monolith, so
+"communication" is necessarily serialization over a network boundary
+(JSON over HTTP, protobuf over gRPC). This is the mechanical reason a
+network call between two "internal" services can fail in ways a
+same-JVM method call structurally cannot: partial failure, timeout, and
+serialization mismatches replace a call stack that used to just throw.
+
+Service discovery mechanically works by services registering their
+network address (host:port) with a registry (Eureka, Consul, or
+Kubernetes' own DNS-based service abstraction) on startup and
+periodically renewing a lease/heartbeat; clients resolve a logical
+service name to a live address at call time rather than hardcoding
+one, which is what actually allows instances to scale up/down or move
+without client reconfiguration.
+
+Circuit breakers (Resilience4j) are a state machine, not a metaphor:
+CLOSED (calls pass through, failures counted in a sliding window) →
+OPEN (calls fail fast without attempting the network call at all, once
+the failure-rate threshold trips) → HALF_OPEN (a limited number of
+trial calls test recovery) → back to CLOSED or OPEN — genuinely
+avoiding wasted timeouts against a downstream service that's already
+down, not just a config knob.
+
 ## Exercise
 
 Sketch (in code comments or a short `text` diagram) a 3-step saga for

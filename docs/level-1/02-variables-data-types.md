@@ -114,6 +114,32 @@ boolean not = !result;                  // NOT
 | Logical | `&& \|\| !` |
 | Increment/Decrement | `++ --` |
 
+## How It Actually Works
+
+Primitives and references are laid out completely differently at runtime.
+A local variable of type `int` lives directly in a slot on the JVM's
+per-frame **operand stack / local variable array** — no boxing, no
+indirection, one word (or two, for `long`/`double`) of raw bits. A
+reference variable (`String`, any object type) is a pointer-sized slot
+holding the address of an object on the heap; the object itself carries a
+**mark word** (hash code, GC age, lock state) and a **klass pointer** back
+to its class metadata, ahead of its actual fields.
+
+This is why `int` arithmetic can never NPE but calling a method on an
+uninitialized `Integer` field can: an uninitialized primitive field is
+guaranteed zeroed at class-preparation time (the JVM spec mandates default
+values — `0`, `0.0`, `false`, `null`), but a `null` reference is a valid
+bit pattern, not a missing object, and dereferencing it triggers a
+hardware-level check the JIT inserts before every field access.
+
+Autoboxing (`Integer i = 5;`) compiles to an explicit `Integer.valueOf(5)`
+call. That method consults a **cache of `Integer` objects from -128 to
+127** (`IntegerCache`, populated once at class-init) — which is exactly
+why `Integer.valueOf(100) == Integer.valueOf(100)` is `true` but the same
+comparison at 200 is `false`: you're comparing cached-object identity,
+not value, and the cache boundary is a real, documented, JVM-internal
+detail rather than a coincidence.
+
 ## Exercise
 
 Write a program that declares an `int` for a number of items, a `double` for

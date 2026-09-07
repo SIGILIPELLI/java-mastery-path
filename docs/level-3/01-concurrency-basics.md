@@ -231,6 +231,33 @@ The simplest way to avoid these problems entirely is to avoid shared mutable
 state: prefer immutable objects and confine mutable data to a single thread
 whenever you can.
 
+## How It Actually Works
+
+Every Java object carries an implicit **monitor** (tied to its mark
+word) that `synchronized` acquires and releases. HotSpot optimizes this
+heavily: an uncontended lock uses **biased or thin/lightweight
+locking** — essentially a compare-and-swap on the mark word with no OS
+call involved — and only escalates to a full OS-level mutex ("inflated"
+lock, with genuine thread suspension via `park()`/`unpark()`) when
+contention is actually detected. This is why uncontended `synchronized`
+blocks are far cheaper than most people expect, and why the cost only
+shows up under real contention.
+
+The Java Memory Model (JLS §17.4) defines **happens-before** relationships,
+not just "locking prevents races" folklore: unlocking a monitor
+happens-before a subsequent lock of the *same* monitor by another
+thread; writing a `volatile` field happens-before a subsequent read of
+that same field. Without such an edge, the JIT and the CPU are both
+free to reorder, cache in registers, or never publish a write to another
+thread at all — which is the actual mechanical reason an unsynchronized
+flag-based loop can spin forever even though "the other thread clearly
+set it."
+
+Thread creation maps to a real OS thread (pre-virtual-threads Java) —
+each carries its own OS-allocated stack (`-Xss`), which is why
+thread-per-request models hit a ceiling in the thousands, long before
+CPU or heap becomes the bottleneck.
+
 ## Exercise
 
 Write a `BankAccount` class with a private `long balanceCents` field and

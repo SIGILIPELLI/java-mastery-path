@@ -178,6 +178,35 @@ work outliving the operation that spawned it.
 | Long-lived pooled worker threads holding native resources | Keep platform threads — virtual threads are meant to be short-lived, one-per-task |
 | Code using `synchronized` blocks around blocking I/O | Can "pin" the virtual thread to its carrier — prefer `ReentrantLock` in hot paths |
 
+## How It Actually Works
+
+**Virtual threads** (Project Loom, standard since Java 21) are not OS
+threads — they're lightweight continuations scheduled by the JVM onto a
+small pool of real "carrier" platform threads (by default, one per
+CPU core, backed by `ForkJoinPool`). When a virtual thread blocks on
+JDK-supported blocking I/O, the JVM **unmounts** it from its carrier
+thread (saving its continuation state to the heap) and frees the
+carrier to run another virtual thread — this is why you can spawn
+millions of virtual threads for blocking I/O-bound work without
+exhausting OS thread limits, where the same code with platform threads
+would exhaust memory on stack allocation alone.
+
+`CompletableFuture` chains build a **graph of callback stages**
+internally: each `.thenApply`/`.thenCompose` registers a dependent
+action against the current stage's completion, executed either
+synchronously by whichever thread completes the prior stage or
+asynchronously on a supplied `Executor` — the "async" variants exist
+specifically to avoid accidentally running your callback on whatever
+thread happened to finish the I/O, which could be a thread you don't
+want doing CPU work.
+
+`StructuredTaskScope` (structured concurrency) enforces that no child
+task can outlive its enclosing scope by joining all forked subtasks
+(and propagating their first failure) before the scope's `try` block
+exits — this closes the classic "fire-and-forget async task that leaks
+past its logical parent" failure mode at the language/API level rather
+than by convention.
+
 ## Exercise
 
 Write a pipeline that fetches a user profile and their order history

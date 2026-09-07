@@ -143,6 +143,31 @@ System.out.printf("%.2f%n", c2.area());   // 78.54
 | `this` | Reference to the current instance |
 | `private` | Restricts access to within the class (encapsulation) |
 
+## How It Actually Works
+
+`new MyClass(...)` is really three JVM steps: allocate raw memory sized
+by the class's instance layout (object header — mark word + klass pointer
+— plus all inherited and declared instance fields, padded for alignment),
+run field defaults, then call the constructor via `invokespecial`, which
+first chains to the superclass constructor before running your body — so
+`Object`'s (trivial) constructor always runs before anything else, top of
+the hierarchy down.
+
+Instance method calls compile to `invokevirtual`, which is resolved
+through the object's actual **vtable** (a per-class array of method
+pointers built during class linking) rather than the compile-time
+reference type — this single mechanism *is* runtime polymorphism:
+calling `shape.area()` looks up index N in whatever concrete class's
+vtable `shape` currently points to. `private`/`static`/constructor calls
+skip this entirely and use `invokespecial`/`invokestatic`, which is
+resolved once, directly, with no virtual dispatch — a real performance
+and semantics difference, not just a style rule.
+
+`this` is passed as a hidden first argument (local slot 0) to every
+instance method — it isn't magic, it's an implicit parameter the compiler
+inserts, which is also why static methods (no hidden `this`) can't
+access instance fields.
+
 ## Exercise
 
 Write a `Book` class with private fields `title`, `author`, and `pagesRead`

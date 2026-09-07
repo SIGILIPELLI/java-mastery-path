@@ -184,6 +184,35 @@ System.out.println(namesByDept);
 Records (used for `Employee` above) are covered fully in
 [Module 9](09-enums-records-sealed.md).
 
+## How It Actually Works
+
+A lambda expression does **not** compile to an anonymous inner class.
+`javac` emits an `invokedynamic` instruction whose bootstrap method
+(`LambdaMetafactory.metafactory`) is invoked once, lazily, the first
+time that lambda expression is reached — it generates a small hidden
+class implementing the target functional interface, wires it up via a
+`MethodHandle` to your lambda body (compiled as a private synthetic
+method), and caches the generated `CallSite` so subsequent hits are just
+a direct call. This is why lambdas have near-zero per-call overhead
+after the first invocation but a one-time class-generation cost, and why
+they show up as synthetic `$$Lambda` classes rather than
+`OuterClass$1`-style anonymous classes in a stack trace.
+
+`Stream` pipelines are **lazy and single-pass**: intermediate operations
+(`map`, `filter`) just build up a chain of `Sink` objects; nothing
+executes until a terminal operation (`collect`, `forEach`, `reduce`)
+pulls elements through the whole chain one at a time. This lets
+`stream().filter(...).map(...).findFirst()` short-circuit after
+processing a single element instead of materializing an intermediate
+collection at every stage — a real fusion optimization, not just
+readable syntax.
+
+`parallelStream()` splits work using the common `ForkJoinPool`
+(work-stealing deques across CPU cores) via a `Spliterator`'s
+`trySplit()`, which is why parallel streams help on CPU-bound,
+splittable, large workloads and actively hurt on small or I/O-bound ones
+— the fork/join overhead and shared-pool contention outweigh the gain.
+
 ## Exercise
 
 Given a `List<String>` of product names with mixed casing and some

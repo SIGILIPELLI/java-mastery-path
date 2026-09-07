@@ -202,6 +202,35 @@ just depends on the `DiscountStrategy` interface.
 | Observer | Notify many interested parties of an event | Subject holds a list of listener interfaces |
 | Strategy | Swappable algorithms without conditionals | Extract behavior behind an interface, inject the implementation |
 
+## How It Actually Works
+
+Every pattern built around polymorphic dispatch (Strategy, Observer,
+Template Method, Decorator) is ultimately leaning on the same JVM
+mechanism: **`invokevirtual`/`invokeinterface` resolving through a
+vtable/itable at the call site based on the object's actual runtime
+class**, not its declared type. The pattern's "magic" — swapping
+behavior by swapping an object — is just this dispatch mechanism used
+deliberately.
+
+Singleton implemented as an `enum` (the recommended form since
+*Effective Java*) isn't a style preference — it's the only approach the
+JVM guarantees is safe against both **reflection-based re-instantiation**
+(the JVM's serialization/deserialization and reflection machinery treat
+enum constants specially and refuse to construct duplicates) and
+double-checked-locking's classic Java Memory Model pitfall (a
+non-`volatile` lazily-initialized singleton reference can be observed
+partially-constructed by another thread due to reordering, unless the
+field is `volatile` — establishing the happens-before edge the JMM
+requires).
+
+Proxy-based patterns (Decorator done via dynamic proxy, or how Spring
+AOP implements method interception) use `java.lang.reflect.Proxy`,
+which generates an actual **bytecode-level class at runtime**
+implementing the target interfaces and routing every call through your
+`InvocationHandler` — real class generation and loading, not
+interpretation, which is why the first call through a fresh proxy pays
+a one-time class-generation cost.
+
 ## Exercise
 
 Implement the Strategy pattern for a `SortingStrategy` interface with a

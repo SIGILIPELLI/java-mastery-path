@@ -205,6 +205,31 @@ scores.entrySet().stream()
 | How many orderings | One ("natural order") | As many as you like |
 | Typical use | `Collections.sort(list)` | `list.sort(comparator)` |
 
+## How It Actually Works
+
+`HashMap` stores entries in an array of buckets sized to a **power of
+two**, and the bucket index is `(n - 1) & hash`, where `hash` first
+XORs the key's `hashCode()` with its own upper 16 bits shifted down
+(`h ^ (h >>> 16)`) specifically to spread entropy from high bits into
+the low bits that the power-of-two mask actually uses — a deliberate
+mitigation against hash codes that only vary in high bits. Since Java 8,
+a bucket that accumulates 8+ colliding entries (and the table is large
+enough) is converted from a linked list to a **red-black tree**,
+turning worst-case O(n) lookup into O(log n) — a real, measurable
+defense against hash-flooding.
+
+Resizing doubles the bucket array and **rehashes every entry** — an
+O(n) operation triggered once the size exceeds `capacity * loadFactor`
+(default 0.75) — which is why pre-sizing a `HashMap` when you know the
+element count avoids repeated resize-and-rehash passes.
+
+`ConcurrentModificationException` isn't a lock — iterators track a
+`modCount` field on the collection, captured when the iterator is
+created; every structural mutation increments it, and each `next()` call
+compares counts and fails fast if they diverge. It's a best-effort bug
+detector, not a correctness guarantee, and it can miss concurrent
+mutations entirely under race conditions.
+
 ## Exercise
 
 Create a `Student` class with `name` (String) and `gpa` (double), implementing

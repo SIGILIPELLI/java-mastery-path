@@ -125,6 +125,32 @@ String html = """
 System.out.print(html);
 ```
 
+## How It Actually Works
+
+`String` objects are backed by an immutable `byte[]` (since Java 9's
+**Compact Strings**: Latin-1 content is stored 1 byte/char, and only
+strings containing real UTF-16 characters fall back to 2 bytes/char,
+tracked by a `coder` flag) — immutability is enforced by the `final`
+field and no mutator methods, which is what makes strings safe to share
+across threads without synchronization and safe to use as `HashMap` keys
+(the hash is computed once and cached in a `hash` field).
+
+String literals are **interned**: the compiler places them in a
+JVM-managed string pool (part of the heap since Java 7), and two
+identical literals resolve to the very same object via `ldc`'s
+constant-pool lookup — which is why `"abc" == "abc"` is `true` but
+`new String("abc") == "abc"` is `false`; `new String(...)` forces a
+fresh heap allocation that bypasses the pool.
+
+String concatenation with `+` in a loop is a trap for a mechanical
+reason: each `+` in older bytecode compiled to a fresh `StringBuilder`
+append-and-`toString()` round trip; modern `javac` (post-JEP 280) instead
+emits an `invokedynamic` call to `StringConcatFactory`, which builds one
+optimized concatenation recipe at the call site — but inside a loop it
+still allocates and discards immutable string garbage every iteration,
+which is exactly why a single `StringBuilder` reused across iterations
+avoids that GC churn.
+
 ## Exercise
 
 Write a program that builds a simple receipt: given parallel arrays of item

@@ -196,6 +196,35 @@ be active.
 | `BCryptPasswordEncoder` | One-way salted password hashing |
 | `@PreAuthorize` | Method-level, expression-based access control |
 
+## How It Actually Works
+
+Spring's dependency injection container builds an in-memory graph of
+**`BeanDefinition`** objects during context startup — metadata (class,
+scope, dependencies, lifecycle callbacks) assembled from component
+scanning, `@Configuration` classes, and reflection over constructors/
+setters — then instantiates beans in dependency order, using
+`Constructor.newInstance()`/reflective setter calls, wiring
+`@Autowired` fields by matching type (and qualifier) against other bean
+definitions already resolved. Circular constructor dependencies fail
+hard here because the container can't construct A before B when each
+needs the other fully built first; circular *setter* dependencies work
+because Spring can hand out a not-yet-fully-populated bean reference
+early and finish wiring it after both exist.
+
+`@Transactional` works via a **runtime proxy** (JDK dynamic proxy for
+interface-based beans, CGLIB-generated subclass otherwise) wrapped
+around your actual bean — calling a `@Transactional` method from
+*outside* the proxy triggers the transaction-management interceptor;
+calling it from another method **inside the same class** bypasses the
+proxy entirely (a direct, non-intercepted call), which is the actual
+mechanical reason "self-invocation doesn't get a transaction" is a real,
+frequently-hit Spring gotcha rather than folklore.
+
+Production profiles/config (`application-prod.yml`) are resolved via a
+layered `PropertySource` search at context startup, environment
+variables and command-line args taking precedence over file-based
+config, evaluated once and cached in the `Environment` abstraction.
+
 ## Exercise
 
 Add a `findByActiveTrueAndCountryCode(String countryCode)` derived query

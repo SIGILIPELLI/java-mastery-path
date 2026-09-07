@@ -165,6 +165,33 @@ client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
 | `HttpResponse<T>` | The response, with status code, headers, and a typed body |
 | `BodyHandlers.ofString()` | Reads the response body as a `String` |
 
+## How It Actually Works
+
+`Socket`/`ServerSocket` are thin Java wrappers around the OS's **BSD
+socket API** — `connect()`, `bind()`, `accept()`, `read()`/`write()` all
+eventually call into native code that issues the corresponding syscalls.
+A blocking `accept()` call parks the calling thread (no CPU spin) until
+the OS kernel completes a TCP three-way handshake and hands back a
+connected file descriptor — which is why a naive thread-per-connection
+server scales only to as many OS threads as the machine can schedule,
+not further.
+
+TCP's stream abstraction means a single `write()` on one end can arrive
+as multiple `read()`s on the other, or multiple writes can coalesce into
+one read — TCP has **no built-in message framing**, only a reliable
+ordered byte stream (Nagle's algorithm and the kernel's send/receive
+buffers actively encourage coalescing for throughput). This is the
+actual mechanical reason application protocols need explicit
+length-prefixing or delimiters; the socket API will never do that for
+you.
+
+`java.nio`'s `Selector`-based non-blocking I/O maps to the OS's
+readiness-notification APIs (`epoll` on Linux, `kqueue` on macOS) — one
+thread can poll thousands of sockets by asking the kernel "which of
+these are ready?" instead of blocking per-socket, which is the
+foundation non-blocking servers (and reactive frameworks like Netty)
+build their scalability on.
+
 ## Exercise
 
 Write a program that uses `HttpClient` to send a GET request to

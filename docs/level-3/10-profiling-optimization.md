@@ -173,6 +173,34 @@ calling `list.contains(x)` inside a loop over a large `ArrayList` turns an
 O(n) task into O(n²), whereas the same check against a `HashSet` stays O(n)
 overall.
 
+## How It Actually Works
+
+HotSpot's name is literal: the interpreter runs bytecode directly at
+first, while a background thread counts method invocations and loop
+back-edges; once a method crosses a threshold it's compiled by the
+**C1 (client) compiler** for fast, lightly-optimized native code, and if
+it stays hot, later recompiled by **C2 (server)** with aggressive
+optimizations — inlining, escape analysis, loop unrolling — informed by
+actual runtime profile data (branch frequencies, observed types at call
+sites) that a purely static compiler could never have. This is why a
+Java benchmark's first few thousand iterations are typically much slower
+than its steady state, and why microbenchmarks without a JIT warm-up
+phase (JMH exists specifically to handle this correctly) produce
+misleading numbers.
+
+**Escape analysis** lets C2 prove an object never leaves the current
+method/thread and, when it can, allocate it on the stack (or eliminate
+the allocation entirely, "scalar replacement") instead of the heap —
+real, load-bearing optimization, not a JIT curiosity, and one reason
+"avoid allocation" advice is less absolute in Java than in
+non-JIT'd languages.
+
+A profiler like async-profiler samples real stack traces using
+safepoint-biased or (better) **AsyncGetCallTrace**/perf-event-based
+sampling to avoid the classic safepoint bias where naive JVM profilers
+only ever see threads paused at safepoints, systematically
+under-sampling code that runs between safepoint polls.
+
 ## Exercise
 
 Write a benchmark comparing `ArrayList.contains()` against `HashSet.contains()`

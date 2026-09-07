@@ -200,6 +200,31 @@ compile-time type checking for that variable — you lose the entire benefit of
 generics and reintroduce the risk of `ClassCastException`. Always supply a
 type argument (or `<>, the diamond operator, when it can be inferred).
 
+## How It Actually Works
+
+Java generics are implemented by **type erasure**: `List<String>` and
+`List<Integer>` compile to the exact same bytecode operating on plain
+`List`, with the compiler inserting invisible `checkcast` instructions
+at extraction points to preserve the illusion of type safety. This is
+why you can't do `new T[10]` (the JVM has no runtime record of what `T`
+is inside a generic method), why `List<String>.class` doesn't exist as a
+distinct `Class` object, and why two overloads differing only by generic
+type parameter are a compile error — after erasure they'd have identical
+signatures.
+
+Bridge methods are the erasure mechanism's most visible artifact: when a
+generic class is subclassed with a concrete type argument and overrides
+a method, the compiler silently generates an extra **bridge method**
+with the erased signature that just casts arguments and delegates to
+your typed override — necessary so `invokevirtual` dispatch still finds
+the right override when called through the raw/erased type.
+
+Wildcards (`? extends T`, `? super T`) exist purely at the compiler
+level to make the erasure-based type system sound for covariant/
+contravariant use (PECS — Producer Extends, Consumer Super) — there is
+zero runtime representation of a wildcard; it's entirely a static
+type-checking device.
+
 ## Exercise
 
 Write a generic class `Stack<T>` backed by a `List<T>` (or an array), with

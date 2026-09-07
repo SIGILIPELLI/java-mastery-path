@@ -171,6 +171,33 @@ Producer -> Exchange (type: topic) -> routing key "order.created" -> Queue "bill
 See [Module 2](02-microservices-architecture.md) for how Saga choreography
 commonly rides on top of this kind of event backbone.
 
+## How It Actually Works
+
+Kafka's durability guarantee comes from an **append-only log** on disk
+per partition — producers append sequentially (cheap, sequential disk
+I/O even on spinning disks), consumers track their own read offset into
+that log independently, and a message isn't "consumed" in the sense of
+being removed; it just sits until a retention policy expires it, which
+is precisely why multiple independent consumer groups can each replay
+the same topic from different offsets without interfering with each
+other.
+
+Partitioning determines both parallelism and ordering: Kafka guarantees
+message order **only within a single partition**, and the default
+partitioner hashes the message key to pick a partition deterministically
+— which is why choosing a key with the right cardinality (e.g. customer
+ID) is what actually gives you "all events for this customer arrive in
+order," not a broker-level global guarantee.
+
+At-least-once vs. exactly-once delivery is fundamentally about **where
+the offset commit happens relative to processing**: committing the
+consumer offset before processing risks losing a message on crash
+(at-most-once); committing after risks reprocessing on crash
+(at-least-once, the common default); genuine exactly-once semantics
+require an idempotent producer plus transactional writes that atomically
+commit the offset and the produced output together — a real protocol
+feature (Kafka transactions), not just careful application code.
+
 ## Exercise
 
 Write a Kafka producer that publishes a `PaymentReceived` JSON event (fields:

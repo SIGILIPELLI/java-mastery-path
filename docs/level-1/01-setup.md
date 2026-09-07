@@ -89,6 +89,35 @@ excellent Java-specific tooling and refactoring), **VS Code** with the
 common choice for serious Java work — pick one and move on, since the editor
 matters far less than practice.
 
+## How It Actually Works
+
+`javac` doesn't produce machine code — it produces **bytecode**, a compact
+stack-based instruction set stored in a `.class` file as a sequence of
+constant-pool entries, method descriptors, and opcodes (`invokestatic`,
+`getstatic`, `areturn`, and so on). When you run `java Hello`, three things
+happen before your first line executes:
+
+1. **Class loading** — the bootstrap/platform/application class loaders (a
+   parent-delegating hierarchy) locate `Hello.class` on the classpath, read
+   the class file, and build an internal `Klass` metadata structure in the
+   JVM's method area (part of metaspace, native memory since Java 8).
+2. **Linking** — *verification* walks every method's bytecode with a
+   dataflow analyzer to prove type-safety (no stack underflow, no jumping
+   into the middle of an instruction, no assigning an `Object` where an
+   `int` is expected) without executing anything; *preparation* zeroes
+   static fields; *resolution* lazily turns symbolic constant-pool
+   references into direct pointers the first time they're used.
+3. **Initialization** — runs `<clinit>`, the synthesized static
+   initializer, exactly once, under a per-class lock, guaranteeing every
+   other thread that later touches the class sees a fully initialized one.
+
+`public static void main(String[] args)` is not a convention the JVM
+merely likes — the launcher reflectively looks up a method with that exact
+signature and modifiers via `Class.getMethod("main", String[].class)` and
+invokes it with `invokestatic`; get the signature wrong and you get
+`NoSuchMethodError`, not a compiler error, because nothing stops you from
+compiling a class without a `main` at all.
+
 ## Exercise
 
 Write a program `Greeter.java` with a `main` method that prints a greeting for

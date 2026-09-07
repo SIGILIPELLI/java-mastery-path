@@ -146,6 +146,31 @@ Files.writeString(
 );
 ```
 
+## How It Actually Works
+
+Classic `java.io` streams are **byte-at-a-time blocking** abstractions
+over OS file descriptors — every unbuffered `read()` is a system call,
+which is why wrapping in `BufferedInputStream`/`BufferedReader` matters:
+it batches many logical reads into far fewer syscalls by filling an
+internal byte array once and serving subsequent reads from memory.
+
+`java.nio` channels work differently: they're built around
+**`ByteBuffer`**, a fixed-capacity block of memory with position/limit/
+capacity markers, and channels can transfer data directly between a file
+and a buffer without the byte-by-byte copying overhead of streams.
+`FileChannel.map()` goes further and uses `mmap()` to map a file region
+directly into the process's virtual address space — reads and writes
+become plain memory accesses the OS page cache satisfies, with no
+explicit read/write syscall per access, which is why memory-mapped I/O
+dramatically outperforms stream I/O for large, randomly-accessed files.
+
+`Files.readAllLines()` and NIO's `WatchService` (for directory-change
+notification) both rely on native OS APIs under a uniform Java API —
+`WatchService` on Linux is backed by `inotify`, on macOS by `FSEvents`
+via a polling/kqueue bridge — meaning latency and exact semantics (e.g.
+whether a rename fires two events or one) are genuinely OS-dependent
+even though the Java code is portable.
+
 ## Exercise
 
 Write a method `logMessage(String message)` that appends `message` plus a

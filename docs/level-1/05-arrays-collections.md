@@ -120,6 +120,30 @@ System.out.println(sum);   // 175
 | Syntax | `arr[i]` | `list.get(i)` |
 | Declared as | `int[] arr` | `List<Integer> list` |
 
+## How It Actually Works
+
+A Java array is a genuine, contiguous, fixed-length memory block with a
+hidden `length` field baked into the object header alongside the mark
+word and klass pointer — that's why `array.length` is a field access
+(`arraylength` opcode), not a method call, and O(1) regardless of size.
+Element access compiles to `iaload`/`aaload` plus an implicit **bounds
+check** the JVM inserts on every access; the JIT can often eliminate
+repeated bounds checks inside a loop once it proves the index stays
+within `[0, length)` (range-check elimination), which is a big chunk of
+why array loops are fast.
+
+Arrays are also **covariant but not truly type-safe** at the array level:
+`Object[] os = new String[3];` compiles fine, but writing a non-`String`
+into `os` throws `ArrayStoreException` at runtime because every array
+carries its actual component type and the JVM checks it on every
+reference-type store (`aastore`), not just at creation.
+
+`ArrayList` wraps a plain `Object[]` internally. Growth is not
+"infinite" — it reallocates to `oldCapacity + (oldCapacity >> 1)` (1.5x)
+and `System.arraycopy`s (a JVM intrinsic, often a single vectorized
+memcpy) the old contents into the new backing array, which is why
+appending is amortized O(1) but occasionally O(n) on a resize.
+
 ## Exercise
 
 Write a program that stores five student names in an `ArrayList<String>` and

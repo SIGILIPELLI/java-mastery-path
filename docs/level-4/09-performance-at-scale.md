@@ -130,6 +130,35 @@ abstraction: business logic doesn't know or care where the cache lives.
 | `@Cacheable` for hot, rarely-changing reads | Removes repeated database round-trips entirely |
 | Distributed cache (Redis) | Keeps cache consistent and shared across horizontally scaled instances |
 
+## How It Actually Works
+
+JVM heap tuning under load is really about balancing three costs that
+trade off mechanically: a larger young generation means fewer, larger
+minor GC pauses; a target pause-time goal (G1's `-XX:MaxGCPauseMillis`)
+makes the collector shrink or grow the young generation between cycles
+to hit that target, at the cost of throughput if the goal is set too
+aggressively — there's no free tuning win, only a real Pareto frontier
+between throughput, pause time, and footprint that every collector
+navigates differently (G1 balances all three, ZGC/Shenandoah trade
+some throughput for near-zero pauses).
+
+Connection-pool and thread-pool sizing under load hits **Little's
+Law** mechanically: the number of concurrent requests a system can
+sustain equals throughput times average latency, so under-sizing a
+downstream connection pool doesn't just slow things down — once
+demand exceeds pool capacity, requests queue, latency rises, which
+(per Little's Law) increases the *effective* concurrent demand further,
+a real feedback loop that can cascade into full outage without any
+single component technically failing.
+
+Caching layers (Caffeine, an in-process cache) use a **W-TinyLFU**
+eviction policy — a frequency sketch estimating access counts with
+bounded memory (a count-min sketch) plus recency — specifically because
+naive LRU is provably vulnerable to one-time bulk scans evicting your
+actually-hot working set; understanding which eviction policy a cache
+uses is what determines whether it survives real production access
+patterns.
+
 ## Exercise
 
 Add `@Cacheable(value = "exchangeRates", key = "#currencyCode")` to a

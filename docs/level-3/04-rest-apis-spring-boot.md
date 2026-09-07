@@ -159,6 +159,33 @@ automatically at startup because both classes are annotated as beans
 Persisting data behind these endpoints with Spring Data JPA is covered in the
 [capstone project](11-project-rest-api-db.md).
 
+## How It Actually Works
+
+Spring Boot's `@RestController` dispatch runs through
+`DispatcherServlet`, which at startup builds a **`HandlerMapping`** —
+essentially a routing table from URL pattern + HTTP method to a
+reflectively-invokable controller method — by scanning `@RequestMapping`
+annotations via reflection at application context startup, not at
+request time. Each incoming request is matched against that table, and
+the actual controller call happens through `Method.invoke()` with
+arguments resolved by `HandlerMethodArgumentResolver`s that pull values
+out of the request (path variables, query params, deserialized JSON
+body via Jackson reflecting over your DTO's fields/setters).
+
+Auto-configuration is conditional reflection at scale:
+`@ConditionalOnClass`/`@ConditionalOnMissingBean` annotations on
+Spring's own configuration classes are evaluated during context
+startup by inspecting the classpath and the bean definitions already
+registered — Spring Boot doesn't know your app in advance; it decides
+what to wire up by *inspecting what's present* at boot time.
+
+Embedded Tomcat means the servlet container is just a library your
+`main()` starts, not an external process — this is why a Spring Boot JAR
+is self-contained and runnable with `java -jar`, and why request
+handling still ultimately bottoms out in ordinary blocking servlet
+threads (one per in-flight request) unless you opt into WebFlux's
+reactive, event-loop model.
+
 ## Exercise
 
 Add a `@RestController` with a `GET /api/square/{n}` endpoint that returns a

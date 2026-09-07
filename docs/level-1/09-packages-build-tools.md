@@ -145,6 +145,30 @@ depth in [Level 2, Module 8](../level-2/08-build-tools.md).
 | Maven | `pom.xml` (XML) | Convention over configuration, declarative |
 | Gradle | `build.gradle` / `build.gradle.kts` | Flexible, script-based (Groovy or Kotlin DSL) |
 
+## How It Actually Works
+
+A package name isn't just documentation — it becomes part of the
+**fully-qualified binary name** stored in every class file's constant
+pool (`com/example/Foo`), and the classpath is literally a list of
+directories/JARs the class loader scans, expecting to find
+`com/example/Foo.class` at the matching relative path. Two classes with
+the same simple name in different packages are completely distinct types
+to the JVM — there's no collision because the loader keys classes by
+`(defining loader, fully-qualified name)`, not simple name.
+
+A JAR file is just a ZIP with a `META-INF/MANIFEST.MF`; when you run
+`java -jar app.jar`, the JVM reads `Main-Class:` from that manifest to
+find the entry point via reflection — the same
+`getMethod("main", String[].class)` lookup as running a class directly.
+
+Maven/Gradle builds matter mechanically because compilation order and
+the classpath they assemble determine which class file wins when the
+**same fully-qualified class name** appears in two dependency JARs
+(classpath order decides, silently — "JAR hell") — the class loader takes
+the first one it finds and never checks the rest, which is why dependency
+conflicts often manifest as confusing `NoSuchMethodError`s at runtime
+rather than build failures.
+
 ## Exercise
 
 Create a Maven project on disk by hand (no need to actually run `mvn` if you

@@ -157,6 +157,35 @@ jcmd <pid> GC.run            # request a full garbage collection
 jcmd <pid> VM.flags          # show the JVM flags currently in effect
 ```
 
+## How It Actually Works
+
+The heap is generationally split because most objects die young (the
+"weak generational hypothesis"): the **young generation** (Eden + two
+Survivor spaces) is collected frequently with a fast copying collector
+— live objects are copied between Survivor spaces and get their
+**age** incremented in the object header each survived cycle, promoted
+to the **old generation** once they cross a tenuring threshold. This
+generational split is why minor GCs are typically sub-millisecond to a
+few milliseconds while full/major GCs (scanning the much larger old
+generation) can pause for much longer.
+
+G1 (the default collector since Java 9) divides the heap into fixed-size
+**regions** instead of contiguous generations, tracks "remembered sets"
+(which regions hold references into which other regions) to avoid
+scanning the whole heap for roots, and picks the regions with the most
+garbage to collect first ("garbage-first") to hit a target pause-time
+goal rather than a fixed heap-size trigger. ZGC/Shenandoah go further,
+doing almost all marking and relocation **concurrently with application
+threads**, using colored pointers or load barriers so a thread reading a
+reference to a moved object gets redirected on the fly instead of the
+world stopping.
+
+Object headers matter beyond GC: the **mark word** also encodes lock
+state (unlocked/biased/thin/fat) and identity hash code, which is why
+calling `System.identityHashCode()` on an object can force the JVM to
+materialize a hash into the header it might otherwise never need to
+compute.
+
 ## Exercise
 
 Write a program that builds a `List<byte[]>`, repeatedly adding a new 1 MB

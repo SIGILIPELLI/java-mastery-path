@@ -177,6 +177,31 @@ logs reconstructs the whole request's path.
 | Metrics | How much / how often / how fast, aggregated over time | Micrometer + Actuator |
 | Traces | How one request's time was spent across services | OpenTelemetry / Micrometer Tracing |
 
+## How It Actually Works
+
+Micrometer instrumentation works by maintaining in-process counters/
+timers/gauges as plain Java objects updated on the hot path (an
+`AtomicLong` increment for a counter, a `LongAdder`-backed histogram
+bucket for a timer) — the actual export to Prometheus/etc. happens on a
+**separate scrape thread pulling a snapshot**, not by pushing metrics
+synchronously on every request, which is why metrics collection has
+near-zero latency impact on request handling itself.
+
+Distributed tracing (OpenTelemetry) propagates a **trace context**
+(trace ID + span ID) through HTTP headers (`traceparent`) across service
+boundaries; each service creates a child span linked to the parent ID it
+received, and the actual "distributed" trace only exists after a
+collector backend stitches spans from multiple services back together
+by shared trace ID — no single service ever sees the whole trace, only
+its own span plus the IDs needed to link it.
+
+Structured logging correlates with traces via MDC (Mapped Diagnostic
+Context) — a **thread-local map** the logging framework reads on every
+log statement to inject fields like `traceId` into each log line; this
+is why MDC values silently disappear across thread hand-offs (e.g. into
+a thread pool or a reactive scheduler) unless the framework explicitly
+propagates the thread-local context along with the task.
+
 ## Exercise
 
 Add a `Counter` named `orders.cancelled` and a `Timer` named

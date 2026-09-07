@@ -180,6 +180,33 @@ for long `instanceof`/cast chains.
 | `record` | Immutable data carrier | Auto-generates constructor, accessors, `equals`/`hashCode`/`toString` |
 | `sealed` | Restrict which types may extend/implement | Enables exhaustive `switch` with no `default` |
 
+## How It Actually Works
+
+An `enum` compiles to a real `final class` extending `java.lang.Enum`,
+with each constant becoming a **`public static final` field** holding a
+singleton instance, all created once in a synthesized static
+initializer and stored in a hidden `values()` array. `switch` on an
+enum doesn't compare by name at runtime — the compiler generates a
+synthetic lookup table mapping each constant's `ordinal()` to a case
+index, which is why reordering enum constants can silently change
+`switch` behavior if code ever depended on ordinal values.
+
+Records are compiler-generated **data carriers**: declaring
+`record Point(int x, int y)` makes `javac` emit a final class with
+private final fields, a canonical constructor, accessor methods named
+exactly `x()`/`y()` (not `getX()`), plus `equals()`, `hashCode()`, and
+`toString()` implementations generated from the component list via an
+`invokedynamic`-based bootstrap (`ObjectMethods`) — the JVM builds these
+method bodies once, reflectively, from the record's component
+descriptors, rather than the compiler inlining boilerplate text.
+
+`sealed` classes/interfaces attach a `PermittedSubclasses` attribute to
+the class file, checked by the verifier at **class-loading time** — it's
+not just a compiler suggestion; a rogue subclass added later that isn't
+in the permits list fails to link at runtime with an
+`IncompatibleClassChangeError` even if it compiles against an old
+version of the sealed type.
+
 ## Exercise
 
 Define a sealed interface `PaymentMethod permits CreditCard, BankTransfer,

@@ -211,6 +211,34 @@ like Spring Data JPA (used in [Level 3, Module 4](04-rest-apis-spring-boot.md)
 and the [capstone project](11-project-rest-api-db.md)) builds on JDBC under
 the hood but lets you work with objects instead of raw SQL.
 
+## How It Actually Works
+
+A JDBC `PreparedStatement` isn't just a syntactic convenience for
+avoiding string concatenation — when you call `prepareStatement(sql)`,
+the driver sends the SQL text to the database **once**, and the database
+parses, plans, and compiles it into an execution plan keyed by that
+exact query shape; every subsequent `setInt`/`setString` +
+`executeQuery` call sends only the bound parameter *values* over the
+wire, reusing the cached plan. This is precisely why prepared statements
+are structurally immune to SQL injection: user input is transmitted as
+data in a separate protocol message, never concatenated into the SQL
+text the parser sees, so there's no way for it to be interpreted as
+syntax.
+
+Connection pooling exists because opening a JDBC connection is
+expensive: TCP handshake, TLS negotiation, database-side authentication,
+and session-state setup all happen per connection — a pool (HikariCP,
+etc.) keeps a warm set of already-authenticated connections and just
+hands one out and takes it back, turning a multi-millisecond setup cost
+into a cheap object checkout.
+
+`ResultSet` iteration is typically a streaming **cursor** on the
+database side, not a fully materialized in-memory table — `next()`
+often triggers a fetch of the next batch of rows over the wire
+(`fetchSize`), which is why holding a `ResultSet` open across a slow
+loop can hold server-side resources and why fetch-size tuning matters
+for large result sets.
+
 ## Exercise
 
 Using an in-memory H2 database, create a `books` table with columns `id`

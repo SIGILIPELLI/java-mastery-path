@@ -165,6 +165,34 @@ to the workflow file (see [Module 5](05-security-best-practices.md)).
 | CI `test` job | Fails fast before any image is built |
 | CI `build-image` job | Produces a versioned, deployable artifact tied to a commit SHA |
 
+## How It Actually Works
+
+A Docker container is not a lightweight VM — it's an ordinary Linux
+process given the illusion of isolation via **namespaces** (separate
+PID, network, mount, and user views) and resource limits enforced by
+**cgroups** (CPU shares, memory ceilings). This is exactly why a JVM
+running inside a container historically miscalculated available memory
+(it saw the *host's* total RAM before container-awareness was added to
+the JVM) and why `-XX:MaxRAMPercentage` and container-aware JVM defaults
+(standard since Java 10+) matter: the JVM now reads the cgroup memory
+limit, not `/proc/meminfo`, to size its heap.
+
+Layered images work because each Dockerfile instruction produces an
+immutable, content-hashed **filesystem layer**, and Docker caches and
+reuses layers unchanged since the last build — this is the actual
+mechanism behind the advice to copy `pom.xml`/dependencies before
+application source in a Dockerfile: dependency-resolution layers stay
+cached across builds where only source changed, avoiding a full
+re-download every build.
+
+Kubernetes liveness/readiness probes are literal periodic HTTP/TCP
+checks the kubelet performs against your pod — a failed liveness probe
+triggers a container restart via the container runtime, while a failed
+readiness probe only removes the pod from the Service's load-balanced
+endpoint set without restarting it, a distinction that maps directly
+onto "is this instance broken" versus "is this instance temporarily not
+ready for traffic."
+
 ## Exercise
 
 Extend the `Dockerfile` above with a `HEALTHCHECK` instruction that curls

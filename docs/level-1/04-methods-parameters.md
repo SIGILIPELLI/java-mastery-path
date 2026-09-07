@@ -114,6 +114,31 @@ static void demo() {
 }
 ```
 
+## How It Actually Works
+
+Every method call pushes a new **stack frame** — its own local variable
+array, operand stack, and reference to the constant pool — onto the
+calling thread's call stack. Arguments are passed **by value**, always:
+for a primitive that's a copy of the bits; for an object reference that's
+a copy of the *pointer*, which is why mutating an object through a
+parameter is visible to the caller (same object) but reassigning the
+parameter itself is not (you only repointed your local copy).
+
+Overload resolution (`invokevirtual` target selection when multiple
+methods share a name) happens **entirely at compile time** based on the
+static types of the arguments — the compiler picks the most specific
+applicable overload and bakes that exact method descriptor into the
+`invoke*` instruction's constant-pool entry. This is why passing `null`
+to two same-named overloads that both accept reference types is
+ambiguous at compile time even though it would be perfectly resolvable
+at runtime.
+
+Recursive calls consume stack frames linearly; the JVM does **not**
+perform tail-call optimization (unlike some other JVM languages' own
+compilers), so deep unbounded recursion in Java always risks
+`StackOverflowError` — a real, fixed-size limit (`-Xss`, default around
+512KB–1MB per thread) rather than a soft warning.
+
 ## Exercise
 
 Write a class `Calculator` with overloaded static methods `add` for two `int`s,

@@ -163,6 +163,31 @@ Both download dependencies from the same shared repository (Maven Central)
 and solve the same underlying problem — the choice is largely ecosystem and
 team convention.
 
+## How It Actually Works
+
+Maven's dependency resolution builds a full **dependency graph**, not a
+flat list — when two dependencies transitively pull in different
+versions of the same library, Maven's "nearest wins" rule (shortest path
+in the graph, ties broken by declaration order) picks exactly one
+version, and every one of your compiled classes that reference that
+library get linked against whichever version wins, silently, at build
+time — this is the mechanical root cause of dependency-version
+conflicts that surface only at runtime as `NoSuchMethodError` when the
+resolved JAR is missing a method your code was compiled against.
+
+Gradle's incremental build model is why it's typically faster on
+repeated builds: each task declares its inputs/outputs, and Gradle
+hashes them to build a task graph, skipping any task whose inputs are
+unchanged since the last run (`UP-TO-DATE`) — genuinely reusing prior
+work rather than a caching illusion, and it can go further with a build
+cache keyed on those same input hashes, sharing results across machines.
+
+Both tools ultimately just orchestrate `javac` (or a compiler daemon
+that keeps the compiler warm across builds to skip JVM startup cost) and
+package the resulting `.class` files into a JAR — the build tool adds
+dependency resolution and lifecycle sequencing on top of primitives you
+could still run by hand with `javac`/`jar`.
+
 ## Exercise
 
 Take the `pom.xml` from [Module 7](07-junit-testing.md) and add a second

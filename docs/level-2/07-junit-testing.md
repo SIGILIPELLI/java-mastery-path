@@ -218,6 +218,30 @@ the same `mvn` lifecycle introduced in
 [Level 1, Module 9](../level-1/09-packages-build-tools.md) and expanded on in
 [Module 8](08-build-tools.md).
 
+## How It Actually Works
+
+JUnit 5 discovers and runs `@Test` methods entirely through
+**reflection**: the platform's launcher scans compiled classes for the
+`@Test` annotation (itself a runtime-retained annotation, stored as an
+attribute in the class file and read back via `Class.getAnnotations()`),
+builds an execution plan of `TestDescriptor` nodes, and invokes each
+method with `Method.invoke()` on a fresh instance — JUnit 5 creates a
+**new test-class instance per test method** by default specifically so
+mutable instance state from one test can't leak into another.
+
+`@BeforeEach`/`@AfterEach` aren't magic hooks the JVM knows about —
+they're plain annotated methods that JUnit's `TestExtensionContext`
+machinery looks up via reflection and calls, wrapped around your actual
+test invocation, all still just ordinary method calls from JUnit's own
+code, not a JVM feature.
+
+Assertion failures work by throwing `AssertionError` (unchecked, extends
+`Error` not `Exception`, signaling "this is not something you're meant
+to catch") — JUnit's test runner specifically catches `Throwable` around
+each invocation and classifies `AssertionError` as a failure versus any
+other exception as an error, which is a design choice in the test
+framework, not a distinction the JVM itself enforces.
+
 ## Exercise
 
 Write a `StringUtils` class with a static method `isPalindrome(String s)`

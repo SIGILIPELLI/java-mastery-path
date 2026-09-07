@@ -287,6 +287,31 @@ if (obj instanceof Dog d && d.name.equals("Rex")) {
 }
 ```
 
+## How It Actually Works
+
+Interface method dispatch uses a **different bytecode instruction**
+(`invokeinterface`) than class method dispatch (`invokevirtual`), because
+a class can implement many interfaces and the JVM can't assume a single
+flat vtable slot works across all of them. Historically `invokeinterface`
+required a linear search through the implementing class's interface
+method table (itable) at every call; modern HotSpot caches the resolved
+method via inline caches so repeated calls on the same receiver type are
+fast, but a megamorphic call site (many different implementing classes
+hitting the same call site) can still fall back to a slower search.
+
+`abstract` classes and interfaces differ at the bytecode level too: an
+abstract method has no `Code` attribute at all — calling it directly
+would be a `AbstractMethodError` if the JVM ever tried, but the compiler
+guarantees you can only call it through a reference whose *actual*
+runtime type provides an implementation, checked via the vtable/itable
+lookup, not by inspecting the abstract declaration.
+
+`super.method()` bypasses virtual dispatch on purpose: it compiles to
+`invokespecial` with the superclass as the explicit target, which is
+exactly why overriding a method and having it call `super.method()`
+doesn't recurse infinitely through the vtable — it's a direct, resolved,
+non-polymorphic call to one specific class's implementation.
+
 ## Exercise
 
 Design an interface `Discountable` with one method `double discountedPrice()`.

@@ -192,6 +192,30 @@ try (FlakyResource r = new FlakyResource()) {
 }
 ```
 
+## How It Actually Works
+
+Multi-catch (`catch (IOException | SQLException e)`) compiles to a
+**single exception-table entry per alternative type**, all pointing at
+the same handler bytecode — the JVM doesn't merge the types into
+anything new, which is exactly why the compiler forbids you from
+reassigning `e` inside a multi-catch block (its static type is the
+least upper bound of the alternatives, and it's implicitly `final`).
+
+Try-with-resources desugars into a `try`/`finally` with an extra
+hidden **suppressed-exception path**: if the try block throws and the
+`close()` call in the compiler-generated `finally` *also* throws, the
+close-time exception is attached to the original via
+`addSuppressed()`/`getSuppressed()` rather than replacing it — a real
+bytecode-level accommodation (added in Java 7) so you never silently
+lose the original failure to a masking `close()` error.
+
+Custom exception hierarchies interact with the exception table's
+`catch_type` matching, which the JVM performs via **class-hierarchy
+`instanceof`-style checks** at each table entry in declaration order —
+which is why a broader catch clause (e.g. `catch (Exception e)`) placed
+before a narrower one is a compile error: the compiler can prove the
+narrower handler would be unreachable dead code.
+
 ## Exercise
 
 Write a custom checked exception `InvalidTemperatureException` with a message

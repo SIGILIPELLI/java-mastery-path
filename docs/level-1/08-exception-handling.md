@@ -126,6 +126,31 @@ Custom exception classes (extending `Exception` or `RuntimeException`) are
 covered in [Level 2](../level-2/05-exceptions-advanced.md), along with
 try-with-resources for automatic cleanup.
 
+## How It Actually Works
+
+A `try`/`catch` block doesn't cost anything when no exception is thrown:
+the compiler emits an **exception table** attached to the method — a list
+of `(start_pc, end_pc, handler_pc, catch_type)` ranges — rather than any
+runtime check. Throwing an exception is what's expensive: `throw`
+triggers `Throwable`'s constructor to call `fillInStackTrace()`, a native
+method that walks every frame on the current thread's call stack and
+snapshots it, which is real, non-trivial work (this is why throwing
+exceptions for ordinary control flow is a measurable performance
+mistake, not just a style complaint).
+
+When an exception propagates, the JVM doesn't unwind gently — the
+interpreter/JIT-compiled code checks the current method's exception table
+for a matching `handler_pc`; if none matches, the frame is popped
+entirely and the search continues in the caller's exception table, all
+the way up until a handler is found or the thread dies with an uncaught
+exception handler print.
+
+Checked vs. unchecked is a **compile-time-only** distinction — nothing
+in the bytecode or the JVM itself treats `IOException` differently from
+`RuntimeException`; `javac` alone enforces that checked exceptions
+appear in a `throws` clause or get caught, which is why reflection can
+freely throw a checked exception from a method that doesn't declare it.
+
 ## Exercise
 
 Write a method `safeDivide(int a, int b)` that returns the division result, but

@@ -188,6 +188,30 @@ thread pinning, and scaling patterns are covered in depth in Level 4.
 | `CompletableFuture<T>` | Composable, non-blocking asynchronous pipeline |
 | Virtual thread | Lightweight, JVM-managed thread (Java 21+) |
 
+## How It Actually Works
+
+`ConcurrentHashMap` (Java 8+) achieves high-concurrency reads/writes
+with **no global lock**: each bucket's head node is updated via CAS
+(compare-and-swap) for the common no-collision insert case, and only
+falls back to a `synchronized` block scoped to that single bin when a
+real collision occurs — contention on bucket A never blocks a thread
+touching bucket B, unlike a `Hashtable` or externally-synchronized
+`HashMap`, which serialize on one lock for the whole table.
+
+`AtomicInteger` and friends aren't locks at all — they wrap a `volatile`
+field and use `Unsafe`/`VarHandle` **compare-and-swap** intrinsics that
+map directly to a single CPU instruction (`LOCK CMPXCHG` on x86). CAS
+loops ("read, compute, try to swap, retry on failure") avoid ever
+blocking a thread, but they can still livelock under extreme contention
+because every failed attempt means real, wasted work, not a queued wait.
+
+`ExecutorService` thread pools reuse OS threads instead of paying
+creation/teardown cost per task; a bounded queue plus a
+`RejectedExecutionHandler` is what actually happens when submission
+outpaces worker capacity — the pool doesn't magically grow past its max
+size, it queues, then rejects, and understanding which of those three
+states you're in is the real skill in tuning one.
+
 ## Exercise
 
 Using an `ExecutorService` with a fixed pool of 4 threads, submit 8 `Callable<Integer>`

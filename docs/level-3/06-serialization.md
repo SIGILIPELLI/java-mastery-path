@@ -169,6 +169,39 @@ Spring Boot uses Jackson automatically under the hood to serialize
 `@RestController` responses to JSON — see
 [Level 3, Module 4](04-rest-apis-spring-boot.md).
 
+## How It Actually Works
+
+`ObjectOutputStream` doesn't just dump raw field bytes — it writes a
+self-describing binary format: a stream header, then for each object a
+**class descriptor** (fully-qualified name, `serialVersionUID`, and a
+list of field names/types) followed by the field values, and object
+references are tracked in a **handle table** so that if the same object
+appears twice in the graph (or the graph is cyclic), it's serialized
+once and referenced by handle thereafter — this is genuinely how
+`Serializable` correctly round-trips shared and cyclic object graphs
+without infinite recursion or duplicate copies.
+
+`serialVersionUID` matters mechanically because deserialization compares
+the UID embedded in the stream against the UID of the class currently
+loaded in the JVM — a mismatch throws `InvalidClassException`
+immediately, before any field data is even read, specifically to stop
+the JVM from mapping old field layouts onto a class whose shape has
+since changed in incompatible ways. If you omit it, `javac` computes one
+automatically from a hash of the class's structure (fields, methods,
+interfaces) — which is why adding an unrelated method can silently
+change the computed UID and break compatibility with previously
+serialized data.
+
+Jackson's `ObjectMapper` works by reflection over your class's fields/
+getters/setters (or record components) to build a cached
+`BeanDescription` the first time it sees a type, then reuses that
+introspected mapping on every subsequent (de)serialization of the same
+class — this is why Jackson performance is dominated by a one-time
+per-class reflection cost rather than per-call reflection, and why a
+class with no default constructor and no matching Jackson annotations
+fails at that introspection step rather than at each individual
+serialize call.
+
 ## Exercise
 
 Create a `Product` record with `name`, `price`, and `inStock` fields. Use

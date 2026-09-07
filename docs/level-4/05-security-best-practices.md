@@ -134,6 +134,32 @@ misconfiguration, and others covered above among them. Treat it as a
 checklist to review against before shipping anything that accepts external
 input.
 
+## How It Actually Works
+
+BCrypt-style password hashing is deliberately **slow by design**: it
+runs a Blowfish-derived key schedule through a configurable number of
+rounds (the "cost factor"), each doubling the work — the point is to
+make brute-forcing a stolen hash database computationally expensive per
+guess, unlike a fast hash (MD5/SHA-256) which an attacker can test at
+billions of guesses per second on commodity GPUs. The salt embedded in
+the BCrypt output isn't secret — its entire purpose is to force an
+attacker to redo the expensive computation per password even for
+identical passwords, defeating precomputed rainbow tables.
+
+Spring Security's filter chain is a literal `List<Filter>` wrapping the
+servlet container's own filter mechanism — every request runs through
+an ordered chain (CSRF check, authentication, authorization) *before*
+your controller method is even reached, each filter able to short-
+circuit the chain and commit a response (a 401/403) without your
+application code ever running.
+
+JWTs are **signed, not encrypted**, by default: the payload (claims) is
+just base64url-encoded JSON, readable by anyone who intercepts the
+token; the signature (HMAC or RSA/ECDSA over header+payload) only lets
+the server detect tampering — this is the mechanical reason putting
+secrets or PII directly in JWT claims is a real vulnerability, not a
+style nitpick.
+
 ## Exercise
 
 Add Bean Validation annotations to a `RegisterDeviceRequest` record with
