@@ -1434,6 +1434,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2357,6 +2368,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2728,6 +2750,8 @@ compile everything under <code>src/main/java</code> with <code>javac -d out ...<
 separate runs of the program, and the accompanying test class exercises the
 core <code>Product</code> and <code>InventoryStorage</code> logic the way
 <a href="../07-junit-testing/">Module 7</a> taught, independent of the CLI wiring.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The JUnit 5 tests run because the framework uses reflection at test-discovery time — it scans the compiled class for methods annotated <code>@Test</code>, invokes each one through <code>Method.invoke()</code>, and catches any thrown <code>AssertionError</code> to report a failure (a passing test is just a method that returns normally). <code>InventoryStorage</code>'s file persistence round-trips through the same buffered-I/O mechanism as any file write in Java: the JVM's <code>BufferedWriter</code> batches your writes in a memory buffer and only issues the actual OS <code>write()</code> syscall when that buffer fills or you flush/close it.</p>
 <h2 id="stretch-goals">Stretch goals<a class="headerlink" href="#stretch-goals" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Add a <code>restock &lt;id&gt; &lt;amount&gt;</code> command that increases quantity relative to

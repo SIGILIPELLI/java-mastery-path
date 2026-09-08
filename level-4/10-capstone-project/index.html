@@ -2324,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2568,6 +2579,17 @@
     <span class="md-ellipsis">
       
         Running it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
       
     </span>
   </a>
@@ -3273,6 +3295,8 @@ cancelling orders — with:</p>
 <a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>curl<span class="w"> </span>localhost:8080/actuator/health
 <a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a><span class="c1"># {&quot;status&quot;:&quot;UP&quot;}</span>
 </code></pre></div>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>The whole stack works because each layer only depends on an abstraction one level down: <code>OrderController</code> calls <code>OrderService</code>'s interface, Spring's dependency-injection container resolves the concrete instance at startup by scanning for <code>@Service</code>-annotated beans and wiring them into the controller's constructor — none of that wiring is hand-written. The JPA entity (<code>Order</code>) becomes a database row through Hibernate's session cache and dirty-checking: when you mutate a managed entity, Hibernate doesn't write immediately, it tracks the change and flushes a batched <code>UPDATE</code> at transaction commit. The Docker/CI pieces work because the container image is a layered filesystem — each <code>Dockerfile</code> instruction adds an immutable layer, and <code>docker-compose</code> just orchestrates multiple such containers on one Docker-managed bridge network so <code>db</code> resolves via the daemon's embedded DNS rather than a real IP you hardcode.</p>
 <h2 id="stretch-goals">Stretch goals<a class="headerlink" href="#stretch-goals" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Add pagination to <code>GET /orders</code> using <code>Pageable</code> (see

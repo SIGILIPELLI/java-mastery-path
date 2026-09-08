@@ -1036,6 +1036,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2313,6 +2324,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2555,6 +2577,8 @@ objects, arrays/collections, strings, exception handling, and packages.</p>
 <p>Each run reloads <code>contacts.csv</code> from disk, so contacts persist across separate
 invocations of the program — just like the file-backed to-do apps common in
 introductory courses, but with proper classes instead of loose data.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p><code>ContactStorage</code>'s file persistence works because Java's <code>PrintWriter</code>/<code>BufferedReader</code> wrap the OS's own file-descriptor and buffered I/O syscalls — every <code>write()</code> call doesn't hit disk immediately, it fills an in-memory buffer that only flushes (a real <code>write(2)</code> syscall) when the buffer's full or you explicitly <code>close()</code> it, which is why forgetting to close a writer can lose your last few lines. The CLI loop itself is just a <code>Scanner</code> reading <code>System.in</code> line by line inside a <code>while</code> loop — there's no magic event system, it blocks on the read syscall until the OS delivers a line of input from the terminal's line-buffered mode.</p>
 <h2 id="stretch-goals">Stretch goals<a class="headerlink" href="#stretch-goals" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Validate email format with a simple check (contains <code>@</code> and a <code>.</code> after it).</li>

@@ -1862,6 +1862,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2401,6 +2412,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#how-it-actually-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Actually Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#stretch-goals" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2717,6 +2739,8 @@ clean layered design.</p>
 repository so validation or business rules can grow there later without
 touching HTTP-handling code — the same layered structure real production
 Spring Boot services use.</p>
+<h2 id="how-it-actually-works">How It Actually Works<a class="headerlink" href="#how-it-actually-works" title="Permanent link">&para;</a></h2>
+<p>When a request hits <code>TaskController</code>, Spring's <code>DispatcherServlet</code> has already matched the URL and HTTP method against your <code>@GetMapping</code>/<code>@PostMapping</code> annotations using a registry built at startup by scanning the classpath for <code>@RestController</code> beans — there's no manual routing table, it's reflection-driven. <code>TaskRepository</code> extending Spring Data's interface means you never write the SQL: at startup, Spring generates a dynamic proxy implementing that interface, and each method name (like <code>findByStatus</code>) is parsed into a JPQL query by convention. Under the hood, every HTTP request runs on its own thread from Tomcat's thread pool, and <code>TaskService</code>'s <code>@Transactional</code> boundary wraps the actual JDBC connection in a database transaction that commits or rolls back atomically when the method returns or throws.</p>
 <h2 id="stretch-goals">Stretch goals<a class="headerlink" href="#stretch-goals" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Add request validation with <code>spring-boot-starter-validation</code>
