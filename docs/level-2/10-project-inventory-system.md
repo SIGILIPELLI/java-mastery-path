@@ -366,6 +366,10 @@ separate runs of the program, and the accompanying test class exercises the
 core `Product` and `InventoryStorage` logic the way
 [Module 7](07-junit-testing.md) taught, independent of the CLI wiring.
 
+## How It Actually Works
+
+The JUnit 5 tests run because the framework uses reflection at test-discovery time — it scans the compiled class for methods annotated `@Test`, invokes each one through `Method.invoke()`, and catches any thrown `AssertionError` to report a failure (a passing test is just a method that returns normally). `InventoryStorage`'s file persistence round-trips through the same buffered-I/O mechanism as any file write in Java: the JVM's `BufferedWriter` batches your writes in a memory buffer and only issues the actual OS `write()` syscall when that buffer fills or you flush/close it.
+
 ## Stretch goals
 
 - Add a `restock <id> <amount>` command that increases quantity relative to

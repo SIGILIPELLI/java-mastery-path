@@ -726,6 +726,10 @@ curl localhost:8080/actuator/health
 # {"status":"UP"}
 ```
 
+## How It Actually Works
+
+The whole stack works because each layer only depends on an abstraction one level down: `OrderController` calls `OrderService`'s interface, Spring's dependency-injection container resolves the concrete instance at startup by scanning for `@Service`-annotated beans and wiring them into the controller's constructor — none of that wiring is hand-written. The JPA entity (`Order`) becomes a database row through Hibernate's session cache and dirty-checking: when you mutate a managed entity, Hibernate doesn't write immediately, it tracks the change and flushes a batched `UPDATE` at transaction commit. The Docker/CI pieces work because the container image is a layered filesystem — each `Dockerfile` instruction adds an immutable layer, and `docker-compose` just orchestrates multiple such containers on one Docker-managed bridge network so `db` resolves via the daemon's embedded DNS rather than a real IP you hardcode.
+
 ## Stretch goals
 
 - Add pagination to `GET /orders` using `Pageable` (see

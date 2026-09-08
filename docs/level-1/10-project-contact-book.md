@@ -229,6 +229,10 @@ Each run reloads `contacts.csv` from disk, so contacts persist across separate
 invocations of the program — just like the file-backed to-do apps common in
 introductory courses, but with proper classes instead of loose data.
 
+## How It Actually Works
+
+`ContactStorage`'s file persistence works because Java's `PrintWriter`/`BufferedReader` wrap the OS's own file-descriptor and buffered I/O syscalls — every `write()` call doesn't hit disk immediately, it fills an in-memory buffer that only flushes (a real `write(2)` syscall) when the buffer's full or you explicitly `close()` it, which is why forgetting to close a writer can lose your last few lines. The CLI loop itself is just a `Scanner` reading `System.in` line by line inside a `while` loop — there's no magic event system, it blocks on the read syscall until the OS delivers a line of input from the terminal's line-buffered mode.
+
 ## Stretch goals
 
 - Validate email format with a simple check (contains `@` and a `.` after it).

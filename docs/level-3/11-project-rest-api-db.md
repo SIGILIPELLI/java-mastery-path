@@ -317,6 +317,10 @@ repository so validation or business rules can grow there later without
 touching HTTP-handling code — the same layered structure real production
 Spring Boot services use.
 
+## How It Actually Works
+
+When a request hits `TaskController`, Spring's `DispatcherServlet` has already matched the URL and HTTP method against your `@GetMapping`/`@PostMapping` annotations using a registry built at startup by scanning the classpath for `@RestController` beans — there's no manual routing table, it's reflection-driven. `TaskRepository` extending Spring Data's interface means you never write the SQL: at startup, Spring generates a dynamic proxy implementing that interface, and each method name (like `findByStatus`) is parsed into a JPQL query by convention. Under the hood, every HTTP request runs on its own thread from Tomcat's thread pool, and `TaskService`'s `@Transactional` boundary wraps the actual JDBC connection in a database transaction that commits or rolls back atomically when the method returns or throws.
+
 ## Stretch goals
 
 - Add request validation with `spring-boot-starter-validation`
