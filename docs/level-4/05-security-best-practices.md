@@ -1,3 +1,7 @@
+---
+description: "Security Best Practices — Module 1 covered authentication and authorization. This module covers the layer beneath that: making sure the data flowing into…"
+---
+
 # 05 · Security Best Practices
 
 [Module 1](01-spring-ecosystem-production.md) covered authentication and

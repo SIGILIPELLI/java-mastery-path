@@ -1,3 +1,7 @@
+---
+description: "Packages & Build Tools Intro — A package is a namespace that groups related classes and avoids naming collisions. The package declaration must be the…"
+---
+
 # 09 · Packages & Build Tools Intro
 
 ## 🎥 Video walkthrough
@@ -172,6 +176,12 @@ the classpath they assemble determine which class file wins when the
 the first one it finds and never checks the rest, which is why dependency
 conflicts often manifest as confusing `NoSuchMethodError`s at runtime
 rather than build failures.
+
+## 🔀 See this in another language
+
+- [JavaScript — Modules & npm Basics](https://sigilipelli.github.io/javascript-mastery-path/level-1/09-modules-npm/)
+- [Rust — Modules & Cargo Project Structure](https://sigilipelli.github.io/rust-mastery-path/level-1/09-modules-cargo/)
+- [Dart — Packages (pub, pubspec.yaml)](https://sigilipelli.github.io/dart-mastery-path/level-1/09-packages/)
 
 ## Exercise
 

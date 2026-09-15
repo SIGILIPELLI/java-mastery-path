@@ -1,3 +1,7 @@
+---
+description: "JDBC & Databases — JDBC (Java Database Connectivity) is the standard API for connecting to relational databases from Java. The same code works against…"
+---
+
 # 03 · JDBC & Databases
 
 JDBC (Java Database Connectivity) is the standard API for connecting to

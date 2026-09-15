@@ -1,3 +1,7 @@
+---
+description: "Generics — Generics let a class, method, or interface operate on a type that's decided when it's used, not when it's written — the same way List and List…"
+---
+
 # 03 · Generics
 
 Generics let a class, method, or interface operate on a type that's decided

@@ -1,3 +1,7 @@
+---
+description: "Design Patterns in Java — Design patterns are named, reusable solutions to recurring design problems. They're not libraries to import — they're shapes of…"
+---
+
 # 05 · Design Patterns in Java
 
 Design patterns are named, reusable solutions to recurring design problems.

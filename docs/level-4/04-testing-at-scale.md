@@ -1,3 +1,7 @@
+---
+description: "Testing at Scale — Level 2 covered JUnit 5 fundamentals for testing pure logic. Production services need three more layers: mocking collaborators so a…"
+---
+
 # 04 · Testing at Scale
 
 [Level 2](../level-2/07-junit-testing.md) covered JUnit 5 fundamentals for

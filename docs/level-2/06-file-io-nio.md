@@ -1,3 +1,7 @@
+---
+description: "File I/O & NIO — Level 1's contact book project already used Files.newBufferedReader/newBufferedWriter to persist data. This module rounds out classic…"
+---
+
 # 06 · File I/O & NIO
 
 [Level 1's contact book project](../level-1/10-project-contact-book.md)

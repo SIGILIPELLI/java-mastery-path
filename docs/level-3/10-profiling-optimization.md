@@ -1,3 +1,7 @@
+---
+description: "Performance Profiling & Optimization — Before optimizing anything, you need to know where time and memory are actually being spent — guessing usually…"
+---
+
 # 10 · Performance Profiling & Optimization
 
 Before optimizing anything, you need to know *where* time and memory are

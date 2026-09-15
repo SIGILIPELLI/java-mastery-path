@@ -1,3 +1,7 @@
+---
+description: "Lambdas & Streams API — Lambda expressions let you pass a block of behavior around like a value. Combined with the Streams API, they let you describe what…"
+---
+
 # 04 · Lambdas & Streams API
 
 Lambda expressions let you pass a block of behavior around like a value.

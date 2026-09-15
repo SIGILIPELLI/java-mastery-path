@@ -1,3 +1,7 @@
+---
+description: "OOP Deep Dive — Level 1 introduced classes and objects. Level 2 goes deeper into the four pillars that make object-oriented Java expressive: inheritance…"
+---
+
 # 01 · OOP Deep Dive
 
 Level 1 introduced classes and objects. Level 2 goes deeper into the four

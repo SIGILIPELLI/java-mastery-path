@@ -1,3 +1,7 @@
+---
+description: "Project — Inventory Management System — The Level 2 capstone pulls together everything from this level: OOP design, the Collections Framework…"
+---
+
 # 10 · Project — Inventory Management System
 
 The Level 2 capstone pulls together everything from this level: OOP design,

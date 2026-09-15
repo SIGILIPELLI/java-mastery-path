@@ -1,3 +1,7 @@
+---
+description: "Observability — Once a service runs in production, System.out.println and a debugger are no longer available to you. Observability — logs, metrics, and…"
+---
+
 # 08 · Observability
 
 Once a service runs in production, `System.out.println` and a debugger are

@@ -1,3 +1,7 @@
+---
+description: "Microservices Architecture Patterns — A monolith becomes hard to scale and deploy independently once a team and codebase grow large enough. Microservices…"
+---
+
 # 02 · Microservices Architecture Patterns
 
 A monolith becomes hard to scale and deploy independently once a team and

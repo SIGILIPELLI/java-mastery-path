@@ -1,3 +1,7 @@
+---
+description: "Build Tools Deep Dive — Level 1, Module 9 introduced Maven's pom.xml and the basic compile/test/package commands. This module goes deeper into the full…"
+---
+
 # 08 · Build Tools Deep Dive
 
 [Level 1, Module 9](../level-1/09-packages-build-tools.md) introduced Maven's

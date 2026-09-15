@@ -1,3 +1,7 @@
+---
+description: "Serialization — Serialization converts an object's in-memory state into a format that can be stored or transmitted, and deserialization reconstructs it.…"
+---
+
 # 06 · Serialization
 
 Serialization converts an object's in-memory state into a format that can be

@@ -1,3 +1,7 @@
+---
+description: "Messaging & Event-Driven Systems — Synchronous REST calls couple a caller to a callee's uptime and latency. An event-driven architecture decouples…"
+---
+
 # 06 · Messaging & Event-Driven Systems
 
 Synchronous REST calls couple a caller to a callee's uptime and latency. An

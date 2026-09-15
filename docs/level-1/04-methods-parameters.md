@@ -1,3 +1,7 @@
+---
+description: "Methods & Parameters — A method is a named, reusable block of code. Methods live inside classes."
+---
+
 # 04 · Methods & Parameters
 
 A method is a named, reusable block of code. Methods live inside classes.
@@ -138,6 +142,12 @@ perform tail-call optimization (unlike some other JVM languages' own
 compilers), so deep unbounded recursion in Java always risks
 `StackOverflowError` — a real, fixed-size limit (`-Xss`, default around
 512KB–1MB per thread) rather than a soft warning.
+
+## 🔀 See this in another language
+
+- [JavaScript — Functions & Scope](https://sigilipelli.github.io/javascript-mastery-path/level-1/04-functions-scope/)
+- [Rust — Functions](https://sigilipelli.github.io/rust-mastery-path/level-1/04-functions/)
+- [Dart — Functions](https://sigilipelli.github.io/dart-mastery-path/level-1/04-functions/)
 
 ## Exercise
 

@@ -1,3 +1,7 @@
+---
+description: "Project — CLI Contact Book — Each run reloads contacts.csv from disk, so contacts persist across separate invocations of the program — just like the…"
+---
+
 # 10 · Project — CLI Contact Book
 
 ## 🎥 Video walkthrough
@@ -248,3 +252,9 @@ introductory courses, but with proper classes instead of loose data.
   with JUnit 5 in [Level 2, Module 7](../level-2/07-junit-testing.md)).
 
 Completing this project means you're ready for **Level 2 · Intermediate**.
+
+## 🔀 See this in another language
+
+- [JavaScript — Project — Browser To-Do List App](https://sigilipelli.github.io/javascript-mastery-path/level-1/10-project-todo-app/)
+- [Rust — Project — CLI To-Do App](https://sigilipelli.github.io/rust-mastery-path/level-1/10-project-todo-cli/)
+- [Dart — Project — CLI To-Do App](https://sigilipelli.github.io/dart-mastery-path/level-1/10-project-todo-cli/)

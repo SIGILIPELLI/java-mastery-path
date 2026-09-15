@@ -1,3 +1,7 @@
+---
+description: "Performance at Scale — Level 3, Module 9 covered how the JVM manages memory and garbage collection conceptually. This module is about turning that…"
+---
+
 # 09 · Performance at Scale
 
 [Level 3, Module 9](../level-3/09-jvm-internals-gc.md) covered how the JVM

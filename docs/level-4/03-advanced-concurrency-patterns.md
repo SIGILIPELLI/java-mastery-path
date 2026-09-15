@@ -1,3 +1,7 @@
+---
+description: "Advanced Concurrency Patterns — Level 3 covered thread pools and the java.util.concurrent primitives. This module goes further: composing asynchronous…"
+---
+
 # 03 · Advanced Concurrency Patterns
 
 [Level 3](../level-3/02-util-concurrent.md) covered thread pools and the

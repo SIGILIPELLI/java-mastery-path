@@ -1,3 +1,7 @@
+---
+description: "Control Flow — Every if/else, while, and for you write compiles down to conditional jump bytecodes operating on the operand stack — if_icmpge, ifeq, goto…"
+---
+
 # 03 · Control Flow
 
 ## if / else
@@ -137,6 +141,12 @@ inside each hash bucket a chain of `.equals()` calls disambiguates
 collisions before jumping to the matching case body. That's why
 `hashCode()` consistency matters even though you never call it directly
 in a `switch` statement.
+
+## 🔀 See this in another language
+
+- [JavaScript — Control Flow](https://sigilipelli.github.io/javascript-mastery-path/level-1/03-control-flow/)
+- [Rust — Control Flow](https://sigilipelli.github.io/rust-mastery-path/level-1/03-control-flow/)
+- [Dart — Control Flow](https://sigilipelli.github.io/dart-mastery-path/level-1/03-control-flow/)
 
 ## Exercise
 

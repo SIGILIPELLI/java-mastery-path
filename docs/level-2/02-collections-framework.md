@@ -1,3 +1,7 @@
+---
+description: "Collections Framework — Level 1 introduced ArrayList as a resizable array. Java's Collections Framework is much bigger than that — a family of interfaces…"
+---
+
 # 02 · Collections Framework
 
 [Level 1](../level-1/05-arrays-collections.md) introduced `ArrayList` as a

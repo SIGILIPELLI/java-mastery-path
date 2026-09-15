@@ -1,3 +1,7 @@
+---
+description: "Reflection & Annotations — Reflection lets a program inspect and manipulate classes, fields, methods, and annotations at runtime, rather than everything…"
+---
+
 # 08 · Reflection & Annotations
 
 Reflection lets a program inspect and manipulate classes, fields, methods, and

@@ -1,3 +1,7 @@
+---
+description: "Spring Ecosystem in Production — Level 3 introduced Spring Boot for building a REST API. Production systems need more: repositories that express real…"
+---
+
 # 01 · Spring Ecosystem in Production
 
 Level 3 introduced Spring Boot for building a REST API. Production systems need

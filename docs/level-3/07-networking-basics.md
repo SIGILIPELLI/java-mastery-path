@@ -1,3 +1,7 @@
+---
+description: "Networking Basics — Java has supported network programming since version 1.0. This module covers the low-level building block — TCP sockets — and the…"
+---
+
 # 07 · Networking Basics
 
 Java has supported network programming since version 1.0. This module covers

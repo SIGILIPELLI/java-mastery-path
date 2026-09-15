@@ -1,3 +1,7 @@
+---
+description: "Strings & String Formatting — String is a reference type, but Java gives it special syntax support (literals, + concatenation). Strings are immutable …"
+---
+
 # 06 · Strings & String Formatting
 
 ## 🎥 Video walkthrough
@@ -154,6 +158,12 @@ optimized concatenation recipe at the call site — but inside a loop it
 still allocates and discards immutable string garbage every iteration,
 which is exactly why a single `StringBuilder` reused across iterations
 avoids that GC churn.
+
+## 🔀 See this in another language
+
+- [JavaScript — Strings & Template Literals](https://sigilipelli.github.io/javascript-mastery-path/level-1/06-strings-template-literals/)
+- [Rust — Collections (Vec, String, HashMap)](https://sigilipelli.github.io/rust-mastery-path/level-1/06-collections/)
+- [Dart — Classes & Objects Basics](https://sigilipelli.github.io/dart-mastery-path/level-1/06-classes-objects/)
 
 ## Exercise
 

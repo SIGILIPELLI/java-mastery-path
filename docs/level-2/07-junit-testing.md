@@ -1,3 +1,7 @@
+---
+description: "Unit Testing with JUnit 5 — Every example so far has been verified by eyeballing printed output. JUnit 5 lets you write automated checks that run in…"
+---
+
 # 07 · Unit Testing with JUnit 5
 
 Every example so far has been verified by eyeballing printed output. JUnit 5

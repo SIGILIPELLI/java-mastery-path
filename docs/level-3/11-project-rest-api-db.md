@@ -1,3 +1,7 @@
+---
+description: "Project — REST API + Database CRUD Service — A capstone project combining everything from Level 3: Spring Boot controllers and dependency injection…"
+---
+
 # 11 · Project — REST API + Database CRUD Service
 
 A capstone project combining everything from Level 3: Spring Boot controllers

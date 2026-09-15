@@ -1,3 +1,7 @@
+---
+description: "Arrays & Basic Collections — An array is a fixed-size, ordered block of elements of the same type."
+---
+
 # 05 · Arrays & Basic Collections
 
 ## Arrays
@@ -143,6 +147,12 @@ reference-type store (`aastore`), not just at creation.
 and `System.arraycopy`s (a JVM intrinsic, often a single vectorized
 memcpy) the old contents into the new backing array, which is why
 appending is amortized O(1) but occasionally O(n) on a resize.
+
+## 🔀 See this in another language
+
+- [JavaScript — Arrays & Objects](https://sigilipelli.github.io/javascript-mastery-path/level-1/05-arrays-objects/)
+- [Rust — Structs & Enums](https://sigilipelli.github.io/rust-mastery-path/level-1/05-structs-enums/)
+- [Dart — Collections (List, Map, Set)](https://sigilipelli.github.io/dart-mastery-path/level-1/05-collections/)
 
 ## Exercise
 

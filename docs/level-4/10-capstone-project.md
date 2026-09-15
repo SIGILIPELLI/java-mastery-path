@@ -1,3 +1,7 @@
+---
+description: "Capstone Project — The capstone pulls together everything from every module of Level 4: a layered Spring Boot service backed by a real database, validated…"
+---
+
 # 10 · Capstone Project
 
 The capstone pulls together everything from every module of Level 4: a

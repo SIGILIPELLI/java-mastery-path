@@ -1,3 +1,7 @@
+---
+description: "Exception Handling Basics — finally runs whether or not an exception was thrown — commonly used for cleanup (closing files, releasing resources)."
+---
+
 # 08 · Exception Handling Basics
 
 ## 🎥 Video walkthrough
@@ -154,6 +158,12 @@ in the bytecode or the JVM itself treats `IOException` differently from
 `RuntimeException`; `javac` alone enforces that checked exceptions
 appear in a `throws` clause or get caught, which is why reflection can
 freely throw a checked exception from a method that doesn't declare it.
+
+## 🔀 See this in another language
+
+- [JavaScript — Error Handling Basics](https://sigilipelli.github.io/javascript-mastery-path/level-1/08-error-handling/)
+- [Rust — Pattern Matching](https://sigilipelli.github.io/rust-mastery-path/level-1/08-pattern-matching/)
+- [Dart — Async Basics](https://sigilipelli.github.io/dart-mastery-path/level-1/08-async-basics/)
 
 ## Exercise
 

@@ -1,3 +1,7 @@
+---
+description: "Variables, Data Types & Operators — Java is statically typed: every variable's type is fixed at declaration and checked by the compiler, before the…"
+---
+
 # 02 · Variables, Data Types & Operators
 
 Java is **statically typed**: every variable's type is fixed at declaration and
@@ -139,6 +143,12 @@ why `Integer.valueOf(100) == Integer.valueOf(100)` is `true` but the same
 comparison at 200 is `false`: you're comparing cached-object identity,
 not value, and the cache boundary is a real, documented, JVM-internal
 detail rather than a coincidence.
+
+## 🔀 See this in another language
+
+- [JavaScript — Variables, Data Types & Operators](https://sigilipelli.github.io/javascript-mastery-path/level-1/02-variables-data-types/)
+- [Rust — Variables, Types & Ownership Basics](https://sigilipelli.github.io/rust-mastery-path/level-1/02-variables-types-ownership/)
+- [Dart — Variables & Types](https://sigilipelli.github.io/dart-mastery-path/level-1/02-variables-types/)
 
 ## Exercise
 

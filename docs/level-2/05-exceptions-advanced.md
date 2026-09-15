@@ -1,3 +1,7 @@
+---
+description: "Exception Handling Advanced — Level 1 covered try/catch/finally and the built-in exception types. This module covers writing your own exception classes…"
+---
+
 # 05 · Exception Handling Advanced
 
 [Level 1](../level-1/08-exception-handling.md) covered `try`/`catch`/`finally`

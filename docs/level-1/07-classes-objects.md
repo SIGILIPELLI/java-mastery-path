@@ -1,3 +1,7 @@
+---
+description: "Classes & Objects Basics — new MyClass(...) is really three JVM steps: allocate raw memory sized by the class's instance layout (object header — mark word…"
+---
+
 # 07 · Classes & Objects Basics
 
 ## 🎥 Video walkthrough
@@ -171,6 +175,12 @@ and semantics difference, not just a style rule.
 instance method — it isn't magic, it's an implicit parameter the compiler
 inserts, which is also why static methods (no hidden `this`) can't
 access instance fields.
+
+## 🔀 See this in another language
+
+- [JavaScript — DOM Basics & Events](https://sigilipelli.github.io/javascript-mastery-path/level-1/07-dom-events/)
+- [Rust — Error Handling Basics (Option, Result)](https://sigilipelli.github.io/rust-mastery-path/level-1/07-error-handling-basics/)
+- [Dart — Null Safety Basics](https://sigilipelli.github.io/dart-mastery-path/level-1/07-null-safety-basics/)
 
 ## Exercise
 

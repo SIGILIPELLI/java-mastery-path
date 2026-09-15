@@ -1,3 +1,7 @@
+---
+description: "Containerization & Deployment — A Java service that 'works on my machine' needs a repeatable, portable way to ship to production. This module covers…"
+---
+
 # 07 · Containerization & Deployment
 
 A Java service that "works on my machine" needs a repeatable, portable way

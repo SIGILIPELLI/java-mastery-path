@@ -1,3 +1,7 @@
+---
+description: "Enums, Records & Sealed Classes — This module covers three modern Java features that make data modeling more concise and safer: enum for fixed sets of…"
+---
+
 # 09 · Enums, Records & Sealed Classes
 
 This module covers three modern Java features that make data modeling more

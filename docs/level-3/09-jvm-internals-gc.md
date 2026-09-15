@@ -1,3 +1,7 @@
+---
+description: "JVM Internals & Garbage Collection Basics — Java code doesn't run directly on the CPU — it runs on the Java Virtual Machine (JVM), which loads compiled…"
+---
+
 # 09 · JVM Internals & Garbage Collection Basics
 
 Java code doesn't run directly on the CPU — it runs on the Java Virtual

@@ -1,3 +1,7 @@
+---
+description: "java.util.concurrent — Manually creating and joining Thread objects gets unwieldy fast. The java.util.concurrent package provides higher-level building…"
+---
+
 # 02 · java.util.concurrent
 
 Manually creating and joining `Thread` objects gets unwieldy fast. The

@@ -1,3 +1,7 @@
+---
+description: "Setup & First Program — java runs compiled programs; javac compiles source (.java) files into bytecode (.class files)."
+---
+
 # 01 · Setup & First Program
 
 ## Install the JDK
@@ -117,6 +121,12 @@ signature and modifiers via `Class.getMethod("main", String[].class)` and
 invokes it with `invokestatic`; get the signature wrong and you get
 `NoSuchMethodError`, not a compiler error, because nothing stops you from
 compiling a class without a `main` at all.
+
+## 🔀 See this in another language
+
+- [JavaScript — Setup & First Program](https://sigilipelli.github.io/javascript-mastery-path/level-1/01-setup/)
+- [Rust — Setup & First Program](https://sigilipelli.github.io/rust-mastery-path/level-1/01-setup/)
+- [Dart — Setup & First Program](https://sigilipelli.github.io/dart-mastery-path/level-1/01-setup/)
 
 ## Exercise
 
