@@ -192,6 +192,10 @@ package the resulting `.class` files into a JAR — the build tool adds
 dependency resolution and lifecycle sequencing on top of primitives you
 could still run by hand with `javac`/`jar`.
 
+## 🔀 See this in another language
+
+- [C++ — 09 · Build Tools (CMake Basics)](https://sigilipelli.github.io/cpp-mastery-path/level-2/09-build-tools-cmake/)
+
 ## Exercise
 
 Take the `pom.xml` from [Module 7](07-junit-testing.md) and add a second

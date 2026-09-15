@@ -220,6 +220,10 @@ which is why a broader catch clause (e.g. `catch (Exception e)`) placed
 before a narrower one is a compile error: the compiler can prove the
 narrower handler would be unreachable dead code.
 
+## 🔀 See this in another language
+
+- [Ruby — 03 · Exception Handling](https://sigilipelli.github.io/ruby-mastery-path/level-2/03-exception-handling/)
+
 ## Exercise
 
 Write a custom checked exception `InvalidTemperatureException` with a message

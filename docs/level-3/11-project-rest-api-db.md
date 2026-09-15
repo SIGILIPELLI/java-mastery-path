@@ -338,3 +338,9 @@ When a request hits `TaskController`, Spring's `DispatcherServlet` has already m
   `application.properties` and the JDBC dependency.
 
 Completing this project means you're ready for **Level 4 · Master**.
+
+## 🔀 See this in another language
+
+- [Swift — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/swift-mastery-path/level-3/10-project-rest-api-db/)
+- [Kotlin — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/kotlin-mastery-path/level-3/10-project-rest-api-db/)
+- [Scala — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/scala-mastery-path/level-3/10-project-rest-api-db/)

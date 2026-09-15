@@ -205,6 +205,12 @@ sampling to avoid the classic safepoint bias where naive JVM profilers
 only ever see threads paused at safepoints, systematically
 under-sampling code that runs between safepoint polls.
 
+## 🔀 See this in another language
+
+- [Python — 10 · Profiling & Performance](https://sigilipelli.github.io/python-mastery-path/level-3/10-profiling-performance/)
+- [C++ — 09 · Performance Profiling](https://sigilipelli.github.io/cpp-mastery-path/level-3/09-performance-profiling/)
+- [Ruby — 06 · Performance & Profiling](https://sigilipelli.github.io/ruby-mastery-path/level-3/06-performance-profiling/)
+
 ## Exercise
 
 Write a benchmark comparing `ArrayList.contains()` against `HashSet.contains()`

@@ -246,6 +246,10 @@ each invocation and classifies `AssertionError` as a failure versus any
 other exception as an error, which is a design choice in the test
 framework, not a distinction the JVM itself enforces.
 
+## 🔀 See this in another language
+
+- [Kotlin — 06 · Testing with JUnit/Kotest](https://sigilipelli.github.io/kotlin-mastery-path/level-2/06-testing-junit-kotest/)
+
 ## Exercise
 
 Write a `StringUtils` class with a static method `isPalindrome(String s)`

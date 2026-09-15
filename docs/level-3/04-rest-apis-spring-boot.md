@@ -190,6 +190,10 @@ handling still ultimately bottoms out in ordinary blocking servlet
 threads (one per in-flight request) unless you opt into WebFlux's
 reactive, event-loop model.
 
+## 🔀 See this in another language
+
+- [Go — 02 · Building REST APIs](https://sigilipelli.github.io/go-mastery-path/level-3/02-building-rest-apis/)
+
 ## Exercise
 
 Add a `@RestController` with a `GET /api/square/{n}` endpoint that returns a

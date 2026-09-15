@@ -390,3 +390,8 @@ The JUnit 5 tests run because the framework uses reflection at test-discovery ti
   malformed CSV lines and asserting each throws `IllegalArgumentException`.
 
 Completing this project means you're ready for **Level 3 · Advanced**.
+
+## 🔀 See this in another language
+
+- [C++ — 10 · Project — Library Management System](https://sigilipelli.github.io/cpp-mastery-path/level-2/10-project-library-management/)
+- [C — 10 · Project — Linked-list Inventory System](https://sigilipelli.github.io/c-mastery-path/level-2/10-project-inventory-system/)
