@@ -192,7 +192,7 @@ reactive, event-loop model.
 
 ## 🔀 See this in another language
 
-- [Go — 02 · Building REST APIs](https://sigilipelli.github.io/go-mastery-path/level-3/02-building-rest-apis/)
+- [Go — 02 · Building REST APIs](https://learnmasterypath.com/go-mastery-path/level-3/02-building-rest-apis/)
 
 ## Exercise
 

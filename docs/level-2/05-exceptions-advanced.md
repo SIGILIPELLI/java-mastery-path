@@ -222,7 +222,7 @@ narrower handler would be unreachable dead code.
 
 ## 🔀 See this in another language
 
-- [Ruby — 03 · Exception Handling](https://sigilipelli.github.io/ruby-mastery-path/level-2/03-exception-handling/)
+- [Ruby — 03 · Exception Handling](https://learnmasterypath.com/ruby-mastery-path/level-2/03-exception-handling/)
 
 ## Exercise
 

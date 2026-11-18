@@ -341,6 +341,6 @@ Completing this project means you're ready for **Level 4 · Master**.
 
 ## 🔀 See this in another language
 
-- [Swift — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/swift-mastery-path/level-3/10-project-rest-api-db/)
-- [Kotlin — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/kotlin-mastery-path/level-3/10-project-rest-api-db/)
-- [Scala — 10 · Project — REST API + Database Service](https://sigilipelli.github.io/scala-mastery-path/level-3/10-project-rest-api-db/)
+- [Swift — 10 · Project — REST API + Database Service](https://learnmasterypath.com/swift-mastery-path/level-3/10-project-rest-api-db/)
+- [Kotlin — 10 · Project — REST API + Database Service](https://learnmasterypath.com/kotlin-mastery-path/level-3/10-project-rest-api-db/)
+- [Scala — 10 · Project — REST API + Database Service](https://learnmasterypath.com/scala-mastery-path/level-3/10-project-rest-api-db/)

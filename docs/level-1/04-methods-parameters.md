@@ -145,9 +145,9 @@ compilers), so deep unbounded recursion in Java always risks
 
 ## 🔀 See this in another language
 
-- [JavaScript — Functions & Scope](https://sigilipelli.github.io/javascript-mastery-path/level-1/04-functions-scope/)
-- [Rust — Functions](https://sigilipelli.github.io/rust-mastery-path/level-1/04-functions/)
-- [Dart — Functions](https://sigilipelli.github.io/dart-mastery-path/level-1/04-functions/)
+- [JavaScript — Functions & Scope](https://learnmasterypath.com/javascript-mastery-path/level-1/04-functions-scope/)
+- [Rust — Functions](https://learnmasterypath.com/rust-mastery-path/level-1/04-functions/)
+- [Dart — Functions](https://learnmasterypath.com/dart-mastery-path/level-1/04-functions/)
 
 ## Exercise
 

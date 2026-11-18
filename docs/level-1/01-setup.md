@@ -124,9 +124,9 @@ compiling a class without a `main` at all.
 
 ## 🔀 See this in another language
 
-- [JavaScript — Setup & First Program](https://sigilipelli.github.io/javascript-mastery-path/level-1/01-setup/)
-- [Rust — Setup & First Program](https://sigilipelli.github.io/rust-mastery-path/level-1/01-setup/)
-- [Dart — Setup & First Program](https://sigilipelli.github.io/dart-mastery-path/level-1/01-setup/)
+- [JavaScript — Setup & First Program](https://learnmasterypath.com/javascript-mastery-path/level-1/01-setup/)
+- [Rust — Setup & First Program](https://learnmasterypath.com/rust-mastery-path/level-1/01-setup/)
+- [Dart — Setup & First Program](https://learnmasterypath.com/dart-mastery-path/level-1/01-setup/)
 
 ## Exercise
 

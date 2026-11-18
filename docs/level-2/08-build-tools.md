@@ -194,7 +194,7 @@ could still run by hand with `javac`/`jar`.
 
 ## 🔀 See this in another language
 
-- [C++ — 09 · Build Tools (CMake Basics)](https://sigilipelli.github.io/cpp-mastery-path/level-2/09-build-tools-cmake/)
+- [C++ — 09 · Build Tools (CMake Basics)](https://learnmasterypath.com/cpp-mastery-path/level-2/09-build-tools-cmake/)
 
 ## Exercise
 

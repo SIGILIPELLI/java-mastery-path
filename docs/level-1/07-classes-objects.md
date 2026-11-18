@@ -178,9 +178,9 @@ access instance fields.
 
 ## 🔀 See this in another language
 
-- [JavaScript — DOM Basics & Events](https://sigilipelli.github.io/javascript-mastery-path/level-1/07-dom-events/)
-- [Rust — Error Handling Basics (Option, Result)](https://sigilipelli.github.io/rust-mastery-path/level-1/07-error-handling-basics/)
-- [Dart — Null Safety Basics](https://sigilipelli.github.io/dart-mastery-path/level-1/07-null-safety-basics/)
+- [JavaScript — DOM Basics & Events](https://learnmasterypath.com/javascript-mastery-path/level-1/07-dom-events/)
+- [Rust — Error Handling Basics (Option, Result)](https://learnmasterypath.com/rust-mastery-path/level-1/07-error-handling-basics/)
+- [Dart — Null Safety Basics](https://learnmasterypath.com/dart-mastery-path/level-1/07-null-safety-basics/)
 
 ## Exercise
 

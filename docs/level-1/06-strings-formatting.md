@@ -161,9 +161,9 @@ avoids that GC churn.
 
 ## 🔀 See this in another language
 
-- [JavaScript — Strings & Template Literals](https://sigilipelli.github.io/javascript-mastery-path/level-1/06-strings-template-literals/)
-- [Rust — Collections (Vec, String, HashMap)](https://sigilipelli.github.io/rust-mastery-path/level-1/06-collections/)
-- [Dart — Classes & Objects Basics](https://sigilipelli.github.io/dart-mastery-path/level-1/06-classes-objects/)
+- [JavaScript — Strings & Template Literals](https://learnmasterypath.com/javascript-mastery-path/level-1/06-strings-template-literals/)
+- [Rust — Collections (Vec, String, HashMap)](https://learnmasterypath.com/rust-mastery-path/level-1/06-collections/)
+- [Dart — Classes & Objects Basics](https://learnmasterypath.com/dart-mastery-path/level-1/06-classes-objects/)
 
 ## Exercise
 

@@ -393,5 +393,5 @@ Completing this project means you're ready for **Level 3 · Advanced**.
 
 ## 🔀 See this in another language
 
-- [C++ — 10 · Project — Library Management System](https://sigilipelli.github.io/cpp-mastery-path/level-2/10-project-library-management/)
-- [C — 10 · Project — Linked-list Inventory System](https://sigilipelli.github.io/c-mastery-path/level-2/10-project-inventory-system/)
+- [C++ — 10 · Project — Library Management System](https://learnmasterypath.com/cpp-mastery-path/level-2/10-project-library-management/)
+- [C — 10 · Project — Linked-list Inventory System](https://learnmasterypath.com/c-mastery-path/level-2/10-project-inventory-system/)

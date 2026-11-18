@@ -179,9 +179,9 @@ rather than build failures.
 
 ## 🔀 See this in another language
 
-- [JavaScript — Modules & npm Basics](https://sigilipelli.github.io/javascript-mastery-path/level-1/09-modules-npm/)
-- [Rust — Modules & Cargo Project Structure](https://sigilipelli.github.io/rust-mastery-path/level-1/09-modules-cargo/)
-- [Dart — Packages (pub, pubspec.yaml)](https://sigilipelli.github.io/dart-mastery-path/level-1/09-packages/)
+- [JavaScript — Modules & npm Basics](https://learnmasterypath.com/javascript-mastery-path/level-1/09-modules-npm/)
+- [Rust — Modules & Cargo Project Structure](https://learnmasterypath.com/rust-mastery-path/level-1/09-modules-cargo/)
+- [Dart — Packages (pub, pubspec.yaml)](https://learnmasterypath.com/dart-mastery-path/level-1/09-packages/)
 
 ## Exercise
 

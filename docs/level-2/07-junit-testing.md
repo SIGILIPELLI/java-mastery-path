@@ -248,7 +248,7 @@ framework, not a distinction the JVM itself enforces.
 
 ## 🔀 See this in another language
 
-- [Kotlin — 06 · Testing with JUnit/Kotest](https://sigilipelli.github.io/kotlin-mastery-path/level-2/06-testing-junit-kotest/)
+- [Kotlin — 06 · Testing with JUnit/Kotest](https://learnmasterypath.com/kotlin-mastery-path/level-2/06-testing-junit-kotest/)
 
 ## Exercise
 
