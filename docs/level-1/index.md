@@ -1,3 +1,7 @@
+---
+description: "Level 1 (Entry) of the free Java Mastery Path. Get comfortable reading and writing Java, understand its core building blocks, and ship a small working…"
+---
+
 # Level 1 · Entry <span class="level-badge">Foundations</span>
 
 Goal: get comfortable reading and writing Java, understand its core building

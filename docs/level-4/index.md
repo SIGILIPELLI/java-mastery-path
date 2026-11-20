@@ -1,3 +1,7 @@
+---
+description: "Level 4 (Master) of the free Java Mastery Path: Spring Ecosystem in Production, Microservices Architecture Patterns, Advanced Concurrency Patterns, Testing…"
+---
+
 # Level 4 · Master
 
 ## Modules

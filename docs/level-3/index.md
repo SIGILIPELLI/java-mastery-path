@@ -1,3 +1,7 @@
+---
+description: "Level 3 (Advanced) of the free Java Mastery Path: Concurrency Basics, java.util.concurrent, JDBC & Databases, Building REST APIs with Spring Boot, Design…"
+---
+
 # Level 3 · Advanced
 
 ## Modules

@@ -1,3 +1,7 @@
+---
+description: "Level 2 (Intermediate) of the free Java Mastery Path: OOP Deep Dive, Collections Framework, Generics, Lambdas & Streams API, Exception Handling Advanced…"
+---
+
 # Level 2 · Intermediate
 
 ## Modules
