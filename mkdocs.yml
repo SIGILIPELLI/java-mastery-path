@@ -53,9 +53,11 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
   - stylesheets/progress-tracker.css
+  - stylesheets/final-quiz.css
 
 extra_javascript:
   - javascripts/progress-tracker.js
+  - javascripts/final-quiz.js
 
 
 
@@ -128,3 +130,5 @@ nav:
       - "08 · Observability": level-4/08-observability.md
       - "09 · Performance at Scale": level-4/09-performance-at-scale.md
       - "10 · Capstone Project": level-4/10-capstone-project.md
+  - "🎯 Final Quiz": quiz.md
+
