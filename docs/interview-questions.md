@@ -1144,7 +1144,7 @@ Needed by frameworks.
 
 Use sparingly.
 
-### [09 · JVM Internals &amp; Garbage Collection Basics](level-3/09-jvm-internals-gc.md)
+### [09 · JVM Internals, Garbage Collection &amp; Performance Profiling](level-3/09-jvm-internals-gc-profiling-optimization.md)
 
 **Q113.** What does the JVM heap hold?
 
@@ -1170,8 +1170,6 @@ Tune carefully.
 
 Heap dumps.
 
-### [10 · Performance Profiling &amp; Optimization](level-3/10-profiling-optimization.md)
-
 **Q117.** What's the first step in optimizing?
 
 **Answer:** Measure with a profiler/JFR before changing code
@@ -1196,7 +1194,7 @@ Reduce churn.
 
 Avoid naive timing.
 
-### [11 · Project — REST API + Database CRUD Service](level-3/11-project-rest-api-db.md)
+### [10 · Project — REST API + Database CRUD Service](level-3/10-project-rest-api-db.md)
 
 **Q121.** What does the REST API + DB project combine?
 
