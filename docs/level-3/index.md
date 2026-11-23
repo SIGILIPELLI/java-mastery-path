@@ -14,6 +14,5 @@ description: "Level 3 (Advanced) of the free Java Mastery Path: Concurrency Basi
 6. [Serialization](06-serialization.md)
 7. [Networking Basics](07-networking-basics.md)
 8. [Reflection & Annotations](08-reflection-annotations.md)
-9. [JVM Internals & Garbage Collection Basics](09-jvm-internals-gc.md)
-10. [Performance Profiling & Optimization](10-profiling-optimization.md)
-11. [Project — REST API + Database CRUD Service](11-project-rest-api-db.md)
+9. [JVM Internals, Garbage Collection & Performance Profiling](09-jvm-internals-gc-profiling-optimization.md)
+10. [Project — REST API + Database CRUD Service](10-project-rest-api-db.md)

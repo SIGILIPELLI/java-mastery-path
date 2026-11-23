@@ -161,7 +161,7 @@ automatically at startup because both classes are annotated as beans
 (`@RestController` and `@Service` are both specializations of the general
 `@Component` stereotype) — you never write `new GreetingService()` yourself.
 Persisting data behind these endpoints with Spring Data JPA is covered in the
-[capstone project](11-project-rest-api-db.md).
+[capstone project](10-project-rest-api-db.md).
 
 ## How It Actually Works
 

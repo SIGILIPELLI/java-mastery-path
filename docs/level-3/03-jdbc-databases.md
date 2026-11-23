@@ -212,7 +212,7 @@ read by name (`rs.getString("name")`) or 1-based index (`rs.getString(1)`).
 
 Real applications typically don't call JDBC directly for every query — an ORM
 like Spring Data JPA (used in [Level 3, Module 4](04-rest-apis-spring-boot.md)
-and the [capstone project](11-project-rest-api-db.md)) builds on JDBC under
+and the [capstone project](10-project-rest-api-db.md)) builds on JDBC under
 the hood but lets you work with objects instead of raw SQL.
 
 ## How It Actually Works

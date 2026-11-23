@@ -5,7 +5,7 @@ description: "A free Java cheat sheet: 36 quick-reference tables from every leve
 
 # Java Cheat Sheet
 
-Quick-reference tables from **36 lessons** of the free Java Mastery Path, in course order from beginner to advanced. Each section links to the full lesson with explanations and runnable examples.
+Quick-reference tables from **35 lessons** of the free Java Mastery Path, in course order from beginner to advanced. Each section links to the full lesson with explanations and runnable examples.
 
 ## Level 1 · Entry
 
@@ -314,9 +314,9 @@ Quick-reference tables from **36 lessons** of the free Java Mastery Path, in cou
 | `@Retention(RetentionPolicy.RUNTIME)` | Keeps the annotation visible to reflection |
 | `@Target` | Restricts where the annotation may be applied |
 
-### [09 · JVM Internals &amp; Garbage Collection Basics](level-3/09-jvm-internals-gc.md)
+### [09 · JVM Internals, Garbage Collection &amp; Performance Profiling](level-3/09-jvm-internals-gc-profiling-optimization.md)
 
-*JVM architecture overview*
+*Part 1 · JVM Internals &amp; Garbage Collection: JVM architecture overview*
 
 | Component | Role |
 |-----------|------|
@@ -327,9 +327,7 @@ Quick-reference tables from **36 lessons** of the free Java Mastery Path, in cou
 | Execution engine | Interprets bytecode, or compiles it to native code via the JIT compiler |
 | Garbage collector | Reclaims heap memory occupied by objects no longer reachable |
 
-### [10 · Performance Profiling &amp; Optimization](level-3/10-profiling-optimization.md)
-
-*Built-in diagnostic tools*
+*Part 2 · Performance Profiling &amp; Optimization: Built-in diagnostic tools*
 
 | Tool | Purpose |
 |------|---------|
