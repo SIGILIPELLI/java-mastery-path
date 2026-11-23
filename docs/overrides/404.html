@@ -1,4 +1,9 @@
 {% extends "main.html" %}
+{#- mp-redirects: lessons renamed by the count standardisation (counts/java-url-redirects.csv). GitHub Pages cannot send 301s, so this course 404 page forwards old URLs. -#}
+{% block extrahead %}
+  {{ super() }}
+  <script>(function(){var m={"/java-mastery-path/level-3/09-jvm-internals-gc/":"/java-mastery-path/level-3/09-jvm-internals-gc-profiling-optimization/","/java-mastery-path/level-3/10-profiling-optimization/":"/java-mastery-path/level-3/09-jvm-internals-gc-profiling-optimization/#part-2-performance-profiling-optimization","/java-mastery-path/level-3/11-project-rest-api-db/":"/java-mastery-path/level-3/10-project-rest-api-db/"};var p=location.pathname.replace(/\/?$/,"/");var t=m[p];if(t){var h=location.hash;location.replace(t.indexOf("#")>=0||!h?t:t+h);}})();</script>
+{% endblock %}
 {% block content %}
 <div class="mp-404">
   <div class="mp-404-code">404</div>
