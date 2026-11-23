@@ -409,7 +409,7 @@ under-sampling code that runs between safepoint polls.
 
 ### 🔀 See this in another language
 
-- [Python — 10 · Profiling & Performance](https://learnmasterypath.com/python-mastery-path/level-3/10-profiling-performance/)
+- [Python — 10 · Profiling & Performance](https://learnmasterypath.com/python-mastery-path/level-3/09-profiling-performance/)
 - [C++ — 09 · Performance Profiling](https://learnmasterypath.com/cpp-mastery-path/level-3/09-performance-profiling/)
 - [Ruby — 06 · Performance & Profiling](https://learnmasterypath.com/ruby-mastery-path/level-3/06-performance-profiling/)
 
